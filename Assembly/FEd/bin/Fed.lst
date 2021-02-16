@@ -1,0 +1,259 @@
+
+; 64tass Turbo Assembler Macro V1.55.2200 listing file
+; 64tass.exe --long-address --flat -b --m65816 -oFed\bin\Fed.pgx --list=Fed\bin\Fed.lst --labels=Fed\bin\Fed.lbl .\Fed\Fed.asm
+; Tue Feb 16 16:03:45 2021
+
+;Offset	;Hex		;Monitor	;Source
+
+;******  Processing input file: .\Fed\Fed.asm
+
+
+;******  Processing file: .\Fed\../Common/PGX.asm
+
+>2000	50 47 58			               .text "PGX"
+>2003	01				               .byte $01
+>2004	08 20 00 00			               .dword START
+
+;******  Return to file: .\Fed\Fed.asm
+
+
+;******  Processing file: .\Fed\../Common/Macros.asm
+
+
+;******  Return to file: .\Fed\Fed.asm
+
+
+;******  Processing file: .\Fed\../Common/Kernel.asm
+
+=$00101c				PUTS                    = $00101C              ; Print a string to the currently selected channel
+=$001018				PUTC                    = $001018
+=$00106c				PRINTCR                 = $00106C
+=$001080				PRINTAH                 = $001080
+=$001078				FK_IPRINTH              = $001078
+=$001084				LOCATE                  = $001084
+=$00112c				FK_SETSIZES             = $00112C
+=$00001e				CUR_COLOR               = $00001E
+=$af0004				BORDER_CTRL_REG	        = $AF0004
+=$afa000				SCREEN_TEXT_MEM         = $AFA000
+=$afc000				SCREEN_TEXT_COL         = $AFC000
+=80					NUM_COLS                = 80
+=60					NUM_ROWS                = 60
+
+;******  Return to file: .\Fed\Fed.asm
+
+=$20					TEXT_COLOR              = $20
+=$010000				LOADBLOCK               = $010000         ; File loading will start here
+=$001118				FK_LOAD                 = $001118       ; load a binary file into memory, supports multiple file formats
+=$000354				DOS_DST_PTR             = $000354      ; 4 bytes - Pointer for transferring data
+=$000340				DOS_FD_PTR              = $000340      ; 4 bytes - A pointer to a file descriptor
+=$000320				SDOS_VARIABLES          = $000320
+.2008					START
+.2008	20 08 23	jsr $2308	            JSR SETUP
+.200b	c2 30		rep #$30	            REP #$30
+.200d	08		php		            PHP
+.200e	e2 20		sep #$20	            SEP #$20
+.2010	48		pha		            PHA
+.2011	a9 00		lda #$00	            LDA #`HELP_TEXT
+.2013	48		pha		            PHA
+.2014	ab		plb		            PLB
+.2015	68		pla		            PLA
+.2016	28		plp		            PLP
+.2017	a2 4b 23	ldx #$234b	                LDX #<>HELP_TEXT               ; Point to the message in an ASCIIZ string
+.201a	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.201e	20 7e 20	jsr $207e	            JSR SETFILEDESC
+.2021	c2 30		rep #$30	            REP #$30
+.2023	a9 00 00	lda #$0000	                LDA #<>LOADBLOCK
+.2026	8f 54 03 00	sta $000354	                STA @l DOS_DST_PTR
+.202a	a9 01 00	lda #$0001	                LDA #`LOADBLOCK
+.202d	8f 56 03 00	sta $000356	                STA @l DOS_DST_PTR+2        ; Set the destination address
+.2031	22 18 11 00	jsl $001118	                JSL FK_LOAD                 ; Attempt to load the file
+.2035	b0 15		bcs $204c	                BCS +                       ; If we got it: start tokenizing
+.2037	c2 30		rep #$30	            REP #$30
+.2039	08		php		            PHP
+.203a	e2 20		sep #$20	            SEP #$20
+.203c	48		pha		            PHA
+.203d	a9 00		lda #$00	            LDA #`FILE_ERROR
+.203f	48		pha		            PHA
+.2040	ab		plb		            PLB
+.2041	68		pla		            PLA
+.2042	28		plp		            PLP
+.2043	a2 31 23	ldx #$2331	                LDX #<>FILE_ERROR               ; Point to the message in an ASCIIZ string
+.2046	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.204a	80 31		bra $207d	                BRA ++
+.204c					+
+.204c	c2 30		rep #$30	            REP #$30
+.204e	08		php		            PHP
+.204f	e2 20		sep #$20	            SEP #$20
+.2051	48		pha		            PHA
+.2052	a9 00		lda #$00	            LDA #`FILE_LOAD
+.2054	48		pha		            PHA
+.2055	ab		plb		            PLB
+.2056	68		pla		            PLA
+.2057	28		plp		            PLP
+.2058	a2 22 23	ldx #$2322	                LDX #<>FILE_LOAD               ; Point to the message in an ASCIIZ string
+.205b	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.205f	e2 20		sep #$20	            SEP #$20
+.2061	ae d8 22	ldx $22d8	                LDX FD_IN.FILESIZE
+.2064	a9 00		lda #$00	                LDA #0
+.2066	9f 00 00 01	sta $010000,x	                STA LOADBLOCK, X
+.206a	c2 30		rep #$30	            REP #$30
+.206c	08		php		            PHP
+.206d	e2 20		sep #$20	            SEP #$20
+.206f	48		pha		            PHA
+.2070	a9 01		lda #$01	            LDA #`LOADBLOCK
+.2072	48		pha		            PHA
+.2073	ab		plb		            PLB
+.2074	68		pla		            PLA
+.2075	28		plp		            PLP
+.2076	a2 00 00	ldx #$0000	                LDX #<>LOADBLOCK               ; Point to the message in an ASCIIZ string
+.2079	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.207d					+
+.207d	6b		rtl		            RTL
+.207e	0b		phd		SETFILEDESC:    PHD
+.207f	08		php		                PHP
+.2080	08		php		            PHP
+.2081	c2 20		rep #$20	            REP #$20
+.2083	48		pha		            PHA
+.2084	a9 20 03	lda #$0320	            LDA #SDOS_VARIABLES
+.2087	5b		tcd		            TCD
+.2088	68		pla		            PLA
+.2089	28		plp		            PLP
+.208a	c2 30		rep #$30	            REP #$30
+.208c	a9 c6 22	lda #$22c6	                LDA #<>FD_IN            ; Point to the file descriptor
+.208f	85 20		sta $0340	                STA DOS_FD_PTR
+.2091	a9 00 00	lda #$0000	                LDA #`FD_IN
+.2094	85 22		sta $0342	                STA DOS_FD_PTR+2
+.2096	a0 00 00	ldy #$0000	                LDY #0                  ; Fille the file descriptor with 0
+.2099	e2 20		sep #$20	            SEP #$20
+.209b	a9 00		lda #$00	                LDA #0
+.209d	97 20		sta [$0340],y	-               STA [DOS_FD_PTR],Y
+.209f	c8		iny		                INY
+.20a0	c0 1e 00	cpy #$001e	                CPY #SIZE(FILEDESC)
+.20a3	d0 f8		bne $209d	                BNE -
+.20a5	c2 20		rep #$20	            REP #$20
+.20a7	a9 c6 20	lda #$20c6	                LDA #<>CLUSTER_BUFF     ; Point to the cluster buffer
+.20aa	8f d4 22 00	sta $0022d4	                STA @l FD_IN.BUFFER
+.20ae	a9 00 00	lda #$0000	                LDA #`CLUSTER_BUFF
+.20b1	8f d6 22 00	sta $0022d6	                STA @l FD_IN.BUFFER+2
+.20b5	a9 42 23	lda #$2342	                LDA #<>FILE_NAME        ; Point the file desriptor to the path
+.20b8	8f c8 22 00	sta $0022c8	                STA @l FD_IN.PATH
+.20bc	a9 00 00	lda #$0000	                LDA #`FILE_NAME
+.20bf	8f ca 22 00	sta $0022ca	                STA @l FD_IN.PATH+2
+.20c3	28		plp		                PLP
+.20c4	2b		pld		                PLD
+.20c5	60		rts		            RTS
+.0000					FILEDESC
+>0000					STATUS              .byte ?             ; The status flags of the file descriptor (open, closed, error, EOF, etc.)
+>0001					DEV                 .byte ?             ; The ID of the device holding the file
+>0002					PATH                .dword ?            ; Pointer to a NULL terminated path string
+>0006					CLUSTER             .dword ?            ; The current cluster of the file.
+>000a					FIRST_CLUSTER       .dword ?            ; The ID of the first cluster in the file
+>000e					BUFFER              .dword ?            ; Pointer to a cluster-sized buffer
+>0012					FILESIZE            .dword ?            ; The size of the file
+>0016					CREATE_DATE         .word ?             ; The creation date of the file
+>0018					CREATE_TIME         .word ?             ; The creation time of the file
+>001a					MODIFIED_DATE       .word ?             ; The modification date of the file
+>001c					MODIFIED_TIME       .word ?             ; The modification time of the file
+>20c6					CLUSTER_BUFF    .fill 512           ; A buffer for cluster read/write operations
+.22c6					FD_IN
+>22c6					STATUS              .byte ?             ; The status flags of the file descriptor (open, closed, error, EOF, etc.)
+>22c7					DEV                 .byte ?             ; The ID of the device holding the file
+>22c8					PATH                .dword ?            ; Pointer to a NULL terminated path string
+>22cc					CLUSTER             .dword ?            ; The current cluster of the file.
+>22d0					FIRST_CLUSTER       .dword ?            ; The ID of the first cluster in the file
+>22d4					BUFFER              .dword ?            ; Pointer to a cluster-sized buffer
+>22d8					FILESIZE            .dword ?            ; The size of the file
+>22dc					CREATE_DATE         .word ?             ; The creation date of the file
+>22de					CREATE_TIME         .word ?             ; The creation time of the file
+>22e0					MODIFIED_DATE       .word ?             ; The modification date of the file
+>22e2					MODIFIED_TIME       .word ?             ; The modification time of the file
+
+;******  Processing file: .\Fed\../Common/Common.asm
+
+.22e4					RESET_SCREEN:
+.22e4	e2 20		sep #$20	            SEP #$20
+.22e6	c2 10		rep #$10	            REP #$10
+.22e8	a2 00 00	ldx #$0000	        LDX #0
+.22eb	a9 20		lda #$20	-       LDA #' '
+.22ed	9f 00 a0 af	sta $afa000,x	        STA @l SCREEN_TEXT_MEM, X
+.22f1	a9 20		lda #$20	        LDA #TEXT_COLOR
+.22f3	9f 00 c0 af	sta $afc000,x	        STA @l SCREEN_TEXT_COL, X
+.22f7	e8		inx		        INX
+.22f8	e0 c0 12	cpx #$12c0	        CPX #(NUM_COLS * NUM_ROWS)
+.22fb	d0 ee		bne $22eb	        BNE -
+.22fd	a2 00 00	ldx #$0000	        LDX #0
+.2300	a0 00 00	ldy #$0000	        LDY #0
+.2303	22 84 10 00	jsl $001084	        JSL LOCATE
+.2307	60		rts		            RTS
+.2308					SETUP:
+.2308	18		clc		        CLC                         ; Make sure we're native mode
+.2309	fb		xce		        XCE
+.230a	e2 20		sep #$20	            SEP #$20
+.230c	c2 10		rep #$10	            REP #$10
+.230e	a9 20		lda #$20	        LDA #TEXT_COLOR            ; Set the Text Color (Green Text on Black Background)
+.2310	8f 1e 00 00	sta $00001e	        STA @lCUR_COLOR             ; @l forces 24 bit addressing mode...
+.2314	a9 00		lda #$00	        LDA #$00                    ; Set to No Border
+.2316	8f 04 00 af	sta $af0004	        STA @lBORDER_CTRL_REG
+.231a	22 2c 11 00	jsl $00112c	        JSL FK_SETSIZES
+.231e	20 e4 22	jsr $22e4	            JSR RESET_SCREEN
+.2321	60		rts		            RTS
+
+;******  Return to file: .\Fed\Fed.asm
+
+>2322	46 69 6c 65 20 6c 6f 61		FILE_LOAD: .NULL "File loaded.", 13, 13
+>232a	64 65 64 2e 0d 0d 00
+>2331	46 69 6c 65 20 6c 6f 61		FILE_ERROR:.NULL "File load error", 13
+>2339	64 20 65 72 72 6f 72 0d 00
+>2342	74 65 73 74 2e 74 78 74		FILE_NAME:  .NULL "test.txt"
+>234a	00
+>234b	46 45 64 20 2d 20 43 32		HELP_TEXT:  .TEXT "FEd - C256 Foenix FMX Editor Help", 13
+>2353	35 36 20 46 6f 65 6e 69 78 20 46 4d 58 20 45 64
+>2363	69 74 6f 72 20 48 65 6c 70 0d
+>236d	3d 3d 3d 3d 3d 3d 3d 3d		            .TEXT "============================================================================", 13
+>2375	3d 3d 3d 3d 3d 3d 3d 3d 3d 3d 3d 3d 3d 3d 3d 3d
+;	...repeated 3 times (48 bytes)...
+>23b5	3d 3d 3d 3d 0d
+>23ba	4c 73 2d 65 20 20 20 20		            .TEXT "Ls-e    List lines. If s and e are missing list entire file. If e is missing", 13
+>23c2	4c 69 73 74 20 6c 69 6e 65 73 2e 20 49 66 20 73
+>23d2	20 61 6e 64 20 65 20 61 72 65 20 6d 69 73 73 69
+>23e2	6e 67 20 6c 69 73 74 20 65 6e 74 69 72 65 20 66
+>23f2	69 6c 65 2e 20 49 66 20 65 20 69 73 20 6d 69 73
+>2402	73 69 6e 67 0d
+>2407	20 20 20 20 20 20 20 20		            .TEXT "        list from s to EOF. If s is missing list to e.", 13
+>240f	6c 69 73 74 20 66 72 6f 6d 20 73 20 74 6f 20 45
+>241f	4f 46 2e 20 49 66 20 73 20 69 73 20 6d 69 73 73
+>242f	69 6e 67 20 6c 69 73 74 20 74 6f 20 65 2e 0d
+>243e	45 73 20 20 20 20 20 20		            .TEXT "Es      Edit lines. If s is missing edit the 1st line.", 13
+>2446	45 64 69 74 20 6c 69 6e 65 73 2e 20 49 66 20 73
+>2456	20 69 73 20 6d 69 73 73 69 6e 67 20 65 64 69 74
+>2466	20 74 68 65 20 31 73 74 20 6c 69 6e 65 2e 0d
+>2475	49 73 20 20 20 20 20 20		            .TEXT "Is      Insert lines. If s is missing insert lines at EOL. If s is 0 or 1", 13
+>247d	49 6e 73 65 72 74 20 6c 69 6e 65 73 2e 20 49 66
+>248d	20 73 20 69 73 20 6d 69 73 73 69 6e 67 20 69 6e
+>249d	73 65 72 74 20 6c 69 6e 65 73 20 61 74 20 45 4f
+>24ad	4c 2e 20 49 66 20 73 20 69 73 20 30 20 6f 72 20
+>24bd	31 0d
+>24bf	20 20 20 20 20 20 20 20		            .TEXT "        insert lines at BOF.", 13
+>24c7	69 6e 73 65 72 74 20 6c 69 6e 65 73 20 61 74 20
+>24d7	42 4f 46 2e 0d
+>24dc	44 73 2d 65 20 20 20 20		            .TEXT "Ds-e    Delete lines. If s and e are missing delete all lines. If e is missing", 13
+>24e4	44 65 6c 65 74 65 20 6c 69 6e 65 73 2e 20 49 66
+>24f4	20 73 20 61 6e 64 20 65 20 61 72 65 20 6d 69 73
+>2504	73 69 6e 67 20 64 65 6c 65 74 65 20 61 6c 6c 20
+>2514	6c 69 6e 65 73 2e 20 49 66 20 65 20 69 73 20 6d
+>2524	69 73 73 69 6e 67 0d
+>252b	20 20 20 20 20 20 20 20		            .TEXT "        delete lines from s to EOF. If s is missing delete lines to e.", 13
+>2533	64 65 6c 65 74 65 20 6c 69 6e 65 73 20 66 72 6f
+>2543	6d 20 73 20 74 6f 20 45 4f 46 2e 20 49 66 20 73
+>2553	20 69 73 20 6d 69 73 73 69 6e 67 20 64 65 6c 65
+>2563	74 65 20 6c 69 6e 65 73 20 74 6f 20 65 2e 0d
+>2572	0d				            .TEXT "", 13
+>2573	57 20 20 20 20 20 20 20		            .TEXT "W       Write the file.", 13
+>257b	57 72 69 74 65 20 74 68 65 20 66 69 6c 65 2e 0d
+>258b	45 20 20 20 20 20 20 20		            .TEXT "E       Write the file and exit.", 13
+>2593	57 72 69 74 65 20 74 68 65 20 66 69 6c 65 20 61
+>25a3	6e 64 20 65 78 69 74 2e 0d
+>25ac	58 20 20 20 20 20 20 20		            .TEXT "X       eXit.", 13, 0
+>25b4	65 58 69 74 2e 0d 00
+
+;******  End of listing
