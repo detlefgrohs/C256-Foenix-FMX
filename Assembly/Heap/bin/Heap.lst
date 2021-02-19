@@ -1,0 +1,299 @@
+
+; 64tass Turbo Assembler Macro V1.55.2200 listing file
+; 64tass.exe --long-address --flat -b --m65816 -oHeap\bin\Heap.pgx --list=Heap\bin\Heap.lst --labels=Heap\bin\Heap.lbl .\Heap\Heap.asm
+; Thu Feb 18 21:53:07 2021
+
+;Offset	;Hex		;Monitor	;Source
+
+;******  Processing input file: .\Heap\Heap.asm
+
+=$0f0000				HEAP_PAGE_START = $0F0000
+=$0fffff				HEAP_PAGE_END   = $0FFFFF
+=$20					TEXT_COLOR              = $20
+
+;******  Processing file: .\Heap\../Common/PGX.asm
+
+>0e0000	50 47 58			               .text "PGX"
+>0e0003	01				               .byte $01
+>0e0004	08 00 0e 00			               .dword START
+
+;******  Return to file: .\Heap\Heap.asm
+
+
+;******  Processing file: .\Heap\../Common/Macros.asm
+
+
+;******  Return to file: .\Heap\Heap.asm
+
+
+;******  Processing file: .\Heap\../Common/Kernel.asm
+
+=$00101c				PUTS                    = $00101C              ; Print a string to the currently selected channel
+=$001018				PUTC                    = $001018
+=$00106c				PRINTCR                 = $00106C
+=$001080				PRINTAH                 = $001080
+=$001078				FK_IPRINTH              = $001078
+=$001084				LOCATE                  = $001084
+=$00112c				FK_SETSIZES             = $00112C
+=$00001e				CUR_COLOR               = $00001E
+=$af0004				BORDER_CTRL_REG	        = $AF0004
+=$afa000				SCREEN_TEXT_MEM         = $AFA000
+=$afc000				SCREEN_TEXT_COL         = $AFC000
+=80					NUM_COLS                = 80
+=60					NUM_ROWS                = 60
+
+;******  Return to file: .\Heap\Heap.asm
+
+.0e0008					START:
+.0e0008	20 f2 00	jsr $0e00f2	            JSR SETUP
+.0e000b	c2 30		rep #$30	            REP #$30
+.0e000d	08		php		            PHP
+.0e000e	e2 20		sep #$20	            SEP #$20
+.0e0010	48		pha		            PHA
+.0e0011	a9 0e		lda #$0e	            LDA #`MSG_WELCOME
+.0e0013	48		pha		            PHA
+.0e0014	ab		plb		            PLB
+.0e0015	68		pla		            PLA
+.0e0016	28		plp		            PLP
+.0e0017	a2 ab 01	ldx #$01ab	                LDX #<>MSG_WELCOME               ; Point to the message in an ASCIIZ string
+.0e001a	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e001e	80 06		bra $0e0026	    BRA +
+.0e0020	20 27 00	jsr $0e0027	            JSR UNIT_TEST_HEAP_MANAGER_INIT
+.0e0023	20 98 00	jsr $0e0098	            JSR UNIT_TEST_HEAP_MANAGER_RESET_CURRENT_BLOCK
+.0e0026	6b		rtl		+   RTL
+.0e0027					UNIT_TEST_HEAP_MANAGER_INIT
+.0e0027	e2 20		sep #$20	            SEP #$20
+.0e0029	c2 10		rep #$10	            REP #$10
+.0e002b	a9 0f		lda #$0f	    LDA #`HEAP_PAGE_START
+.0e002d	a2 00 00	ldx #$0000	    LDX #<>HEAP_PAGE_START
+.0e0030	a0 ff ff	ldy #$ffff	    LDY #<>HEAP_PAGE_END
+.0e0033	20 0c 01	jsr $0e010c	            JSR HEAP_MANAGER_INIT
+.0e0036	c2 20		rep #$20	            REP #$20
+.0e0038	a9 00 00	lda #$0000	    LDA #<>HEAP_PAGE_START
+.0e003b	8d f6 01	sta $0e01f6	    STA MY_HEAP_MANAGER
+.0e003e	e2 20		sep #$20	            SEP #$20
+.0e0040	a9 0f		lda #$0f	    LDA #`HEAP_PAGE_START
+.0e0042	8d f8 01	sta $0e01f8	    STA MY_HEAP_MANAGER + 2
+.0e0045	c2 30		rep #$30	            REP #$30
+.0e0047	08		php		            PHP
+.0e0048	e2 20		sep #$20	            SEP #$20
+.0e004a	48		pha		            PHA
+.0e004b	a9 0e		lda #$0e	            LDA #`MSG_UNIT_TEST_HEAP_MANAGER_INIT
+.0e004d	48		pha		            PHA
+.0e004e	ab		plb		            PLB
+.0e004f	68		pla		            PLA
+.0e0050	28		plp		            PLP
+.0e0051	a2 c9 01	ldx #$01c9	                LDX #<>MSG_UNIT_TEST_HEAP_MANAGER_INIT               ; Point to the message in an ASCIIZ string
+.0e0054	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e0058	e2 20		sep #$20	            SEP #$20
+.0e005a	a0 02 00	ldy #$0002	    LDY #HEAP_MANAGER_HEADER.HEAP_MANAGER_START + 2
+.0e005d	b7 a0		lda [$a0],y	    LDA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e005f	c9 0f		cmp #$0f	    CMP #`HEAP_PAGE_START
+.0e0061	d0 21		bne $0e0084	    BNE FAILED
+.0e0063	c2 20		rep #$20	            REP #$20
+.0e0065	a0 00 00	ldy #$0000	    LDY #HEAP_MANAGER_HEADER.HEAP_MANAGER_START
+.0e0068	b7 a0		lda [$a0],y	    LDA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e006a	c9 00 00	cmp #$0000	    CMP #<>HEAP_PAGE_START
+.0e006d	d0 15		bne $0e0084	    BNE FAILED
+.0e006f	c2 30		rep #$30	            REP #$30
+.0e0071	08		php		            PHP
+.0e0072	e2 20		sep #$20	            SEP #$20
+.0e0074	48		pha		            PHA
+.0e0075	a9 0e		lda #$0e	            LDA #`MSG_PASSED
+.0e0077	48		pha		            PHA
+.0e0078	ab		plb		            PLB
+.0e0079	68		pla		            PLA
+.0e007a	28		plp		            PLP
+.0e007b	a2 e6 01	ldx #$01e6	                LDX #<>MSG_PASSED               ; Point to the message in an ASCIIZ string
+.0e007e	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e0082	80 13		bra $0e0097	    BRA +
+.0e0084					FAILED:
+.0e0084	c2 30		rep #$30	            REP #$30
+.0e0086	08		php		            PHP
+.0e0087	e2 20		sep #$20	            SEP #$20
+.0e0089	48		pha		            PHA
+.0e008a	a9 0e		lda #$0e	            LDA #`MSG_FAILED
+.0e008c	48		pha		            PHA
+.0e008d	ab		plb		            PLB
+.0e008e	68		pla		            PLA
+.0e008f	28		plp		            PLP
+.0e0090	a2 ee 01	ldx #$01ee	                LDX #<>MSG_FAILED               ; Point to the message in an ASCIIZ string
+.0e0093	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e0097					+
+.0e0097	60		rts		            RTS
+.0e0098					UNIT_TEST_HEAP_MANAGER_RESET_CURRENT_BLOCK
+.0e0098	e2 20		sep #$20	            SEP #$20
+.0e009a	c2 10		rep #$10	            REP #$10
+.0e009c	ad f8 01	lda $0e01f8	    LDA MY_HEAP_MANAGER + 2
+.0e009f	ae f6 01	ldx $0e01f6	    LDX MY_HEAP_MANAGER
+.0e00a2	20 7d 01	jsr $0e017d	            JSR HEAP_MANAGER_RESET_CURRENT_BLOCK
+.0e00a5	c2 30		rep #$30	            REP #$30
+.0e00a7	08		php		            PHP
+.0e00a8	e2 20		sep #$20	            SEP #$20
+.0e00aa	48		pha		            PHA
+.0e00ab	a9 0e		lda #$0e	            LDA #`MSG_PASSED
+.0e00ad	48		pha		            PHA
+.0e00ae	ab		plb		            PLB
+.0e00af	68		pla		            PLA
+.0e00b0	28		plp		            PLP
+.0e00b1	a2 e6 01	ldx #$01e6	                LDX #<>MSG_PASSED               ; Point to the message in an ASCIIZ string
+.0e00b4	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e00b8	80 13		bra $0e00cd	    BRA +
+.0e00ba					FAILED:
+.0e00ba	c2 30		rep #$30	            REP #$30
+.0e00bc	08		php		            PHP
+.0e00bd	e2 20		sep #$20	            SEP #$20
+.0e00bf	48		pha		            PHA
+.0e00c0	a9 0e		lda #$0e	            LDA #`MSG_FAILED
+.0e00c2	48		pha		            PHA
+.0e00c3	ab		plb		            PLB
+.0e00c4	68		pla		            PLA
+.0e00c5	28		plp		            PLP
+.0e00c6	a2 ee 01	ldx #$01ee	                LDX #<>MSG_FAILED               ; Point to the message in an ASCIIZ string
+.0e00c9	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e00cd					+
+.0e00cd	60		rts		            RTS
+
+;******  Processing file: .\Heap\../Common/Common.asm
+
+.0e00ce					RESET_SCREEN:
+.0e00ce	e2 20		sep #$20	            SEP #$20
+.0e00d0	c2 10		rep #$10	            REP #$10
+.0e00d2	a2 00 00	ldx #$0000	        LDX #0
+.0e00d5	a9 20		lda #$20	-       LDA #' '
+.0e00d7	9f 00 a0 af	sta $afa000,x	        STA @l SCREEN_TEXT_MEM, X
+.0e00db	a9 20		lda #$20	        LDA #TEXT_COLOR
+.0e00dd	9f 00 c0 af	sta $afc000,x	        STA @l SCREEN_TEXT_COL, X
+.0e00e1	e8		inx		        INX
+.0e00e2	e0 c0 12	cpx #$12c0	        CPX #(NUM_COLS * NUM_ROWS)
+.0e00e5	d0 ee		bne $0e00d5	        BNE -
+.0e00e7	a2 00 00	ldx #$0000	        LDX #0
+.0e00ea	a0 00 00	ldy #$0000	        LDY #0
+.0e00ed	22 84 10 00	jsl $001084	        JSL LOCATE
+.0e00f1	60		rts		            RTS
+.0e00f2					SETUP:
+.0e00f2	18		clc		        CLC                         ; Make sure we're native mode
+.0e00f3	fb		xce		        XCE
+.0e00f4	e2 20		sep #$20	            SEP #$20
+.0e00f6	c2 10		rep #$10	            REP #$10
+.0e00f8	a9 20		lda #$20	        LDA #TEXT_COLOR            ; Set the Text Color (Green Text on Black Background)
+.0e00fa	8f 1e 00 00	sta $00001e	        STA @lCUR_COLOR             ; @l forces 24 bit addressing mode...
+.0e00fe	a9 00		lda #$00	        LDA #$00                    ; Set to No Border
+.0e0100	8f 04 00 af	sta $af0004	        STA @lBORDER_CTRL_REG
+.0e0104	22 2c 11 00	jsl $00112c	        JSL FK_SETSIZES
+.0e0108	20 ce 00	jsr $0e00ce	            JSR RESET_SCREEN
+.0e010b	60		rts		            RTS
+
+;******  Return to file: .\Heap\Heap.asm
+
+
+;******  Processing file: .\Heap\HeapManager.asm
+
+=$a0					ZP_HEAP_MANAGER_HEADER_POINTER = $A0
+=$a3					ZP_HEAP_MANAGER_BLOCK_POINTER  = $A3
+.0000					HEAP_MANAGER_HEADER
+>0000					    HEAP_MANAGER_START      .long ?
+>0003					    HEAP_MANAGER_END        .long ?
+>0006					    HEAP_TOTAL_SIZE         .word ?
+>0008					    HEAP_FIRST_BLOCK_HEADER .long ?
+>000b					    CURRENT_BLOCK_HEADER    .long ?
+.0000					HEAP_MANAGER_BLOCK_HEADER
+>0000					    PREV_BLOCK_HEADER       .word ?
+>0002					    NEXT_BLOCK_HEADER       .word ?
+>0004					    REFERENCE_COUNT         .word ?
+>0006					    DATA_SIZE               .word ?
+.0e010c					HEAP_MANAGER_INIT
+.0e010c	20 9d 01	jsr $0e019d	            JSR HEAP_MANAGER_SETUP_ZP_HEADER_POINTER
+.0e010f	e2 20		sep #$20	            SEP #$20
+.0e0111	85 a5		sta $a5		    STA ZP_HEAP_MANAGER_BLOCK_POINTER + 2
+.0e0113	c2 20		rep #$20	            REP #$20
+.0e0115	8a		txa		    TXA
+.0e0116	18		clc		    CLC
+.0e0117	69 0e 00	adc #$000e	    ADC #SIZE(HEAP_MANAGER_HEADER)
+.0e011a	85 a3		sta $a3		    STA ZP_HEAP_MANAGER_BLOCK_POINTER
+.0e011c	c2 20		rep #$20	            REP #$20
+.0e011e	98		tya		    TYA
+.0e011f	aa		tax		    TAX
+.0e0120	a5 a0		lda $a0		    LDA ZP_HEAP_MANAGER_HEADER_POINTER
+.0e0122	a0 00 00	ldy #$0000	    LDY #HEAP_MANAGER_HEADER.HEAP_MANAGER_START
+.0e0125	97 a0		sta [$a0],y	    STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e0127	c8		iny		    INY
+.0e0128	c8		iny		    INY
+.0e0129	a5 a2		lda $a2		    LDA ZP_HEAP_MANAGER_HEADER_POINTER + 2
+.0e012b	97 a0		sta [$a0],y	    STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e012d	8a		txa		    TXA
+.0e012e	a0 03 00	ldy #$0003	    LDY #HEAP_MANAGER_HEADER.HEAP_MANAGER_END
+.0e0131	97 a0		sta [$a0],y	    STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e0133	c8		iny		    INY
+.0e0134	c8		iny		    INY
+.0e0135	a5 a2		lda $a2		    LDA ZP_HEAP_MANAGER_HEADER_POINTER + 2
+.0e0137	97 a0		sta [$a0],y	    STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e0139	a0 03 00	ldy #$0003	    LDY #HEAP_MANAGER_HEADER.HEAP_MANAGER_END
+.0e013c	b7 a0		lda [$a0],y	    LDA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e013e	a0 00 00	ldy #$0000	    LDY #HEAP_MANAGER_HEADER.HEAP_MANAGER_START
+.0e0141	38		sec		    SEC
+.0e0142	e9 0e 00	sbc #$000e	    SBC #SIZE(HEAP_MANAGER_HEADER)
+.0e0145	a0 06 00	ldy #$0006	    LDY #HEAP_MANAGER_HEADER.HEAP_TOTAL_SIZE
+.0e0148	97 a0		sta [$a0],y	    STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e014a	e2 20		sep #$20	            SEP #$20
+.0e014c	a0 0a 00	ldy #$000a	    LDY #HEAP_MANAGER_HEADER.HEAP_FIRST_BLOCK_HEADER + 2
+.0e014f	a5 a5		lda $a5		    LDA ZP_HEAP_MANAGER_BLOCK_POINTER + 2
+.0e0151	97 a0		sta [$a0],y	    STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e0153	c2 20		rep #$20	            REP #$20
+.0e0155	a0 08 00	ldy #$0008	    LDY #HEAP_MANAGER_HEADER.HEAP_FIRST_BLOCK_HEADER
+.0e0158	a5 a3		lda $a3		    LDA ZP_HEAP_MANAGER_BLOCK_POINTER
+.0e015a	97 a0		sta [$a0],y	    STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e015c	a9 00 00	lda #$0000	    LDA #0
+.0e015f	a0 00 00	ldy #$0000	    LDY #HEAP_MANAGER_BLOCK_HEADER.PREV_BLOCK_HEADER
+.0e0162	97 a3		sta [$a3],y	    STA [ZP_HEAP_MANAGER_BLOCK_POINTER], Y
+.0e0164	a0 02 00	ldy #$0002	    LDY #HEAP_MANAGER_BLOCK_HEADER.NEXT_BLOCK_HEADER
+.0e0167	97 a3		sta [$a3],y	    STA [ZP_HEAP_MANAGER_BLOCK_POINTER], Y
+.0e0169	a0 04 00	ldy #$0004	    LDY #HEAP_MANAGER_BLOCK_HEADER.REFERENCE_COUNT
+.0e016c	97 a3		sta [$a3],y	    STA [ZP_HEAP_MANAGER_BLOCK_POINTER], Y
+.0e016e	a0 06 00	ldy #$0006	    LDY #HEAP_MANAGER_HEADER.HEAP_TOTAL_SIZE
+.0e0171	b7 a0		lda [$a0],y	    LDA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e0173	a0 06 00	ldy #$0006	    LDY #HEAP_MANAGER_BLOCK_HEADER.DATA_SIZE
+.0e0176	38		sec		    SEC
+.0e0177	e9 08 00	sbc #$0008	    SBC #SIZE(HEAP_MANAGER_BLOCK_HEADER)
+.0e017a	97 a3		sta [$a3],y	    STA [ZP_HEAP_MANAGER_BLOCK_POINTER], Y
+.0e017c	60		rts		            RTS
+.0e017d					HEAP_MANAGER_RESET_CURRENT_BLOCK
+.0e017d	20 9d 01	jsr $0e019d	            JSR HEAP_MANAGER_SETUP_ZP_HEADER_POINTER
+.0e0180	c2 30		rep #$30	            REP #$30
+.0e0182	a0 08 00	ldy #$0008	    LDY #HEAP_MANAGER_HEADER.HEAP_FIRST_BLOCK_HEADER
+.0e0185	b7 a0		lda [$a0],y	    LDA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e0187	85 a3		sta $a3		    STA ZP_HEAP_MANAGER_BLOCK_POINTER
+.0e0189	a0 0b 00	ldy #$000b	    LDY #HEAP_MANAGER_HEADER.CURRENT_BLOCK_HEADER
+.0e018c	97 a0		sta [$a0],y	    STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e018e	e2 20		sep #$20	            SEP #$20
+.0e0190	a0 0a 00	ldy #$000a	    LDY #HEAP_MANAGER_HEADER.HEAP_FIRST_BLOCK_HEADER + 2
+.0e0193	b7 a0		lda [$a0],y	    LDA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e0195	85 a5		sta $a5		    STA ZP_HEAP_MANAGER_BLOCK_POINTER + 2
+.0e0197	a0 0d 00	ldy #$000d	    LDY #HEAP_MANAGER_HEADER.CURRENT_BLOCK_HEADER + 2
+.0e019a	97 a0		sta [$a0],y	    STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
+.0e019c	60		rts		            RTS
+.0e019d					HEAP_MANAGER_SETUP_ZP_HEADER_POINTER
+.0e019d	48		pha		    PHA
+.0e019e	08		php		    PHP
+.0e019f	e2 20		sep #$20	            SEP #$20
+.0e01a1	85 a2		sta $a2		    STA ZP_HEAP_MANAGER_HEADER_POINTER + 2
+.0e01a3	c2 20		rep #$20	            REP #$20
+.0e01a5	8a		txa		    TXA
+.0e01a6	85 a0		sta $a0		    STA ZP_HEAP_MANAGER_HEADER_POINTER
+.0e01a8	28		plp		    PLP
+.0e01a9	68		pla		    PLA
+.0e01aa	60		rts		            RTS
+
+;******  Return to file: .\Heap\Heap.asm
+
+>0e01ab	48 65 61 70 4d 61 6e 61		MSG_WELCOME:                        .NULL "HeapManager Unit Tests Ready", 13
+>0e01b3	67 65 72 20 55 6e 69 74 20 54 65 73 74 73 20 52
+>0e01c3	65 61 64 79 0d 00
+>0e01c9	55 4e 49 54 5f 54 45 53		MSG_UNIT_TEST_HEAP_MANAGER_INIT:    .NULL "UNIT_TEST_HEAP_MANAGER_INIT "
+>0e01d1	54 5f 48 45 41 50 5f 4d 41 4e 41 47 45 52 5f 49
+>0e01e1	4e 49 54 20 00
+>0e01e6	50 61 73 73 65 64 0d 00		MSG_PASSED:                         .NULL "Passed", 13
+>0e01ee	46 61 69 6c 65 64 0d 00		MSG_FAILED:                         .NULL "Failed", 13
+>0e01f6					MY_HEAP_MANAGER .long ?
+
+;******  End of listing

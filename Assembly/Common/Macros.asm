@@ -82,11 +82,33 @@ PRINTS          .macro
                 JSL PUTS                 ; And ask the kernel to print it
                 .endm
                 
-;;; =========================================================================
-;PGX_HEADER      .macro
-;;; * = START - 8   ; Preamble to set a PGX
-;                .text "PGX"
-;                .byte $01
-;                .dword START
-;                .endm
-;;; =========================================================================
+CLEAR_WORD  .macro word
+                SETAL
+                STZ \word
+            .endm
+
+SET_LONG_POINTER .macro value, pointer
+                SETAL
+                LDA #<>\value
+                STA \pointer
+                SETAS
+                LDA #`\value
+                STA \pointer + 2
+            .endm
+
+CLEAR_LONG_POINTER .macro pointer
+                SETAL
+                STZ \pointer
+                SETAS
+                STZ \pointer + 2
+            .endm
+
+PUSH_S_AND_DP .macro
+                PHP
+                PHD            
+            .endm
+
+PULL_DP_AND_S .macro
+                PLD
+                PLP
+            .endm
