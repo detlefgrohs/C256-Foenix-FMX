@@ -2,117 +2,63 @@
 ;;; My Heap Management Code
 ;;; =========================================================================
 
+IncludeUnitTests = true
+TraceEnabled = true
+
 HEAP_PAGE_START = $0F0000
 HEAP_PAGE_END   = $0FFFFF
 
 TEXT_COLOR              = $20
 
+TraceMemoryStart        = $A8
+
+;* = $a0
+;.dsection ZeroPage
+
 * = $0E0000             ; Set the origin for the file
 
-.INCLUDE "../Common/PGX.asm"
+;.INCLUDE "../Common/PGX.asm"
 .INCLUDE "../Common/Macros.asm"
 .INCLUDE "../Common/Kernel.asm"
 
-UNIT_TEST_HEAP_MANAGER_HEADER_COMPARE .macro index, compareTo
-    LDY #\index
-    LDA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
-    CMP #\compareTo
-    BNE FAILED
-.endm
+; .INCLUDE "Macros.asm"
+
+
 
 START:   
     CALL SETUP
-    PRINTS MSG_WELCOME
-    BRA +
-
-    CALL UNIT_TEST_HEAP_MANAGER_INIT
-    CALL UNIT_TEST_HEAP_MANAGER_RESET_CURRENT_BLOCK
-
-+   RTL
-
-
-UNIT_TEST_HEAP_MANAGER_INIT .proc
-    ; Setup My_Heap_Manager
-    SETAS
-    SETXL
-    LDA #`HEAP_PAGE_START
-    LDX #<>HEAP_PAGE_START
-    LDY #<>HEAP_PAGE_END
-    CALL HEAP_MANAGER_INIT
-
-    SETAL
-    LDA #<>HEAP_PAGE_START
-    STA MY_HEAP_MANAGER
-    SETAS
-    LDA #`HEAP_PAGE_START
-    STA MY_HEAP_MANAGER + 2
+    PRINTS Strings.Ready
     
-    PRINTS MSG_UNIT_TEST_HEAP_MANAGER_INIT
+    SETAXL
+    LDA #$1234
+    LDX #$5678
+    LDY #$90AB
+    TraceAXY "Test TraceAXY"
 
-    ; Check HEAP_PAGE_START
-    SETAS
-    UNIT_TEST_HEAP_MANAGER_HEADER_COMPARE HEAP_MANAGER_HEADER.HEAP_MANAGER_START + 2, `HEAP_PAGE_START
+    CALL HeapManager.UnitTests.Init
+    CALL HeapManager.UnitTests.ResetCurrentBlock
+
+    TraceMemory "HeapManager.ZeroPage", $0008A0, 6
+    TraceMemory "HeapManager.Header", HEAP_PAGE_START, SIZE(HeapManager.Header)
+
     SETAL
-    UNIT_TEST_HEAP_MANAGER_HEADER_COMPARE HEAP_MANAGER_HEADER.HEAP_MANAGER_START, <>HEAP_PAGE_START
+    LDA HeapManager.ZeroPage.BlockPointer
+    TraceMemoryA "HeapManager.Block", `HEAP_PAGE_START, SIZE(HeapManager.BlockHeader)
 
-    ; Check HEAP_MANAGER_END
-    SETAS
-    UNIT_TEST_HEAP_MANAGER_HEADER_COMPARE HEAP_MANAGER_HEADER.HEAP_MANAGER_END + 2, `HEAP_PAGE_END
-    SETAL
-    UNIT_TEST_HEAP_MANAGER_HEADER_COMPARE HEAP_MANAGER_HEADER.HEAP_MANAGER_END, <>HEAP_PAGE_END
+    RTL
 
-    ; Check HEAP_TOTAL_SIZE
+.INCLUDE "HeapManager.asm"
 
-    ; Check HEAP_FIRST_BLOCK_HEADER
-    SETAS
-    UNIT_TEST_HEAP_MANAGER_HEADER_COMPARE HEAP_MANAGER_HEADER.HEAP_FIRST_BLOCK_HEADER + 2, `HEAP_PAGE_START
-    SETAL
-    UNIT_TEST_HEAP_MANAGER_HEADER_COMPARE HEAP_MANAGER_HEADER.HEAP_FIRST_BLOCK_HEADER, (<>HEAP_PAGE_END + SIZE(HEAP_MANAGER_HEADER))
-
-
-    PRINTS MSG_PASSED
-    BRA +
-FAILED:     
-    PRINTS MSG_FAILED
-+   RETURN
-.pend
-
-UNIT_TEST_HEAP_MANAGER_RESET_CURRENT_BLOCK .proc
-    SETAS
-    SETXL
-    LDA MY_HEAP_MANAGER + 2
-    LDX MY_HEAP_MANAGER
-    CALL HEAP_MANAGER_RESET_CURRENT_BLOCK
-
-    PRINTS MSG_UNIT_TEST_HEAP_MANAGER_RESET_CURRENT_BLOCK
-
-    ; Check CURRENT_BLOCK_HEADER
-
-
-    ; CHECK ZP_HEAP_MANAGER_BLOCK_POINTER
-
-
-    PRINTS MSG_PASSED
-    BRA +
-FAILED:
-    PRINTS MSG_FAILED
-+   RETURN
-.pend
 
 
 
 .INCLUDE "../Common/Common.asm"
 
-.INCLUDE "HeapManager.asm"
 
+Strings .block
+    Ready:                        .NULL "HeapManager.UnitTests Ready", 13, 13
+.bend
 
-MSG_WELCOME:                        .NULL "HeapManager Unit Tests Ready", 13
-
-MSG_UNIT_TEST_HEAP_MANAGER_INIT:    .NULL "UNIT_TEST_HEAP_MANAGER_INIT "
-MSG_UNIT_TEST_HEAP_MANAGER_RESET_CURRENT_BLOCK: .NULL "UNIT_TEST_HEAP_MANAGER_RESET_CURRENT_BLOCK "
-
-MSG_PASSED:                         .NULL "Passed", 13
-MSG_FAILED:                         .NULL "Failed", 13
 
 MY_HEAP_MANAGER .long ?
 

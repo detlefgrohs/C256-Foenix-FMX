@@ -1,5 +1,75 @@
 
 
+
+
+
+HeapManager .block
+
+
+Init .proc
+
+.pend
+
+
+.bend
+
+
+; Public Methods
+HeapManager.Init
+
+; Private Methods
+HeapManager.Private.SplitBlock
+
+
+HeapManager.Header.Get
+HeapManager.Header.Set
+HeapManager.Header.Start
+HeapManager.Header.End
+HeapManager.Header.Size
+HeapManager.Header.FirstBlock
+HeapManager.Header.CurrentBlock
+
+HeapManager.BlockHeader.Get
+HeapManager.BlockHeader.Set
+HeapManager.BlockHeader.Prev
+HeapManager.BlockHeader.Next
+HeapManager.BlockHeader.RefCount
+HeapManager.BlockHeader.Size
+
+
+
+HeapManager.UnitTests.Init
+
+
+
+; File Structure
+HeapManager.asm
+    HeapManager .block
+
+    HeapManager_Macros.asm
+        ? Maybe put in block they are used...
+
+    HeapManager_Data.asm
+        Header .block
+            For Get and Set Macros
+        Header .struct
+
+        BlockHeader .block
+            For Get and Set Macros
+        BlockHeader .struct
+
+    HeapManager_Private.asm
+        Private .bloc
+
+HeapManager_UnitTests.asm
+    HeapManager .block
+    UnitTests .block
+    ; Separate because not needed with HeapManager
+
+
+
+; ===========================================================================
+
 HEAP_MANAGER
     HEAP_MANAGER_START      .long ?
     HEAP_MANAGER_END        .long ?
