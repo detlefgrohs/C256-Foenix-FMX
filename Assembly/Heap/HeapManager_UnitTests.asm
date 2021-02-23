@@ -17,6 +17,7 @@ FailedUnitTest .proc
 .pend
 
 Init .proc
+    Trace "HeapManager.UnitTests.Init"
     ; Setup My_Heap_Manager
     SETAL
     LDA #0

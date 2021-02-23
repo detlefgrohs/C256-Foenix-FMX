@@ -4,6 +4,8 @@ Set-Location $scriptDir
 function Assemble-Project() {
     param($project)
 
+    'Version .NULL "' + [System.DateTime]::Now.ToString("yyyyMMdd-hhmmss") + '", 13' | Set-Content ".\$project\Version.asm"
+
     # Write-Host -ForegroundColor Green "Compiling $project to PGX..."
 
     # $arguments = @();
@@ -50,11 +52,11 @@ function Assemble-Project() {
     if ($success) { Write-Host -ForegroundColor Green "Success!" }
     else          { Write-Host -ForegroundColor Red "Failure!" }
 
-    # if ((hostname) -eq "My64Bot") {
-    #     Copy-Item "$project\bin\$project.pgx" "F:\"
-    # }
-
-    # python C256Mgr\c256mgr.py --send Heap\bin\heap.hex
+    if (((hostname) -eq "My64Bot") -and $success) {
+        # Copy-Item "$project\bin\$project.pgx" "F:\"
+        Write-Host -ForegroundColor Green "Sending to C256 Foenix FMX"
+        python C256Mgr\c256mgr.py --port COM3 --send Heap\bin\heap.hex
+    }
 }
 
 Write-Host -ForegroundColor Yellow "============================================================================"

@@ -1,6 +1,8 @@
 
 
-RESET_SCREEN:    ; Need to write routine to clear 
+RESET_SCREEN .proc    
+; Need to write routine to clear 
+
         SETAS
         SETXL
         LDX #0
@@ -16,11 +18,12 @@ RESET_SCREEN:    ; Need to write routine to clear
 
         LDX #0
         LDY #0
-        JSL LOCATE
-        
+        JSL LOCATE        
         RETURN
+.pend
 
-SETUP:  ; Setup the CPU
+SETUP .proc ; Setup the CPU
+        PushAll
         CLC                         ; Make sure we're native mode
         XCE
         SETAS
@@ -34,19 +37,16 @@ SETUP:  ; Setup the CPU
 ;;; =========================================================================
         CALL RESET_SCREEN
 ;;; =========================================================================
+        PullAll
         RETURN      
+.pend
 
+.if TraceEnabled == true
 ; This is ugly trace code and I hate it...
 PrintTrace .proc
-        PHP
-        setaxl
-        PHA
-        PHX
-        PHY
-        PHB
-        PHD
+        PushAll
 
-        setaxl
+        SETAXL
         LDA 11,S        ; Get the return address
 calc_addr   
         CLC
@@ -66,24 +66,75 @@ pr_loop
         BRA pr_loop
 
 done    
-        setaxl
-        PLD
+        PullAll
+        .pend
+
+
+
+PrintTraceAX .proc
+        PushAll
+
+        PHX
+        PHA
+
+        SETAXL
+        LDA 15,S        ; Get the return address
+calc_addr   
+        CLC
+        ADC #3          ; Add 3 to skip over the following branch
+        TAX
+
+        setas
+        LDA #`PrintTraceAX
+        PHA
         PLB
-        PLY
-        PLX
+
+pr_loop     
+        LDA #0,B,X
+        BEQ done
+        CALL ScreenPutChar
+        INX
+        BRA pr_loop
+
+done    
+        PrintChar '('
+        PrintChar 'A'
+        PrintChar '='
+        
+        SETAL
         PLA
-        PLP
-        RTS
+        PHA
+        SETAS
+        XBA
+        JSL PRINTAH
+        SETAL
+        PLA
+        SETAS
+        JSL PRINTAH
+
+        PrintChar ','
+        PrintChar 'X'
+        PrintChar '='
+
+        SETAL
+        PLA
+        PHA
+        SETAS
+        XBA
+        JSL PRINTAH
+        SETAL
+        PLA
+        SETAS
+        JSL PRINTAH
+
+        PrintChar ')'
+        PrintChar 13
+
+        PullAll
         .pend
 
 PrintTraceAXY .proc
-        PHP
-        setaxl
-        PHA
-        PHX
-        PHY
-        PHB
-        PHD
+        PushAll
 
         PHY
         PHX
@@ -109,13 +160,9 @@ pr_loop
         BRA pr_loop
 
 done    
-        SETAS
-        LDA#'('
-        CALL ScreenPutChar
-        LDA#'A'
-        CALL ScreenPutChar
-        LDA#'='
-        CALL ScreenPutChar
+        PrintChar '('
+        PrintChar 'A'
+        PrintChar '='
 
         SETAL
         PLA
@@ -128,13 +175,9 @@ done
         SETAS
         JSL PRINTAH
 
-        SETAS
-        LDA#','
-        CALL ScreenPutChar
-        LDA#'X'
-        CALL ScreenPutChar
-        LDA#'='
-        CALL ScreenPutChar
+        PrintChar ','
+        PrintChar 'X'
+        PrintChar '='
 
         SETAL
         PLA
@@ -147,13 +190,9 @@ done
         SETAS
         JSL PRINTAH
 
-        SETAS
-        LDA#','
-        CALL ScreenPutChar
-        LDA#'Y'
-        CALL ScreenPutChar
-        LDA#'='
-        CALL ScreenPutChar
+        PrintChar ','
+        PrintChar 'Y'
+        PrintChar '='
 
         SETAL
         PLA
@@ -166,32 +205,16 @@ done
         SETAS
         JSL PRINTAH
 
-        SETAS
-        LDA#')'
-        CALL ScreenPutChar
-        LDA #13
-        CALL ScreenPutChar
+        PrintChar ')'
+        PrintChar 13
 
-        setaxl
-        PLD
-        PLB
-        PLY
-        PLX
-        PLA
-        PLP
-        RTS
+        PullAll
         .pend
 
 
 
 PrintMemory .proc
-        PHP
-        setaxl
-        PHA
-        PHX
-        PHY
-        PHB
-        PHD
+        PushAll
 
         setaxl
         LDA 11,S        ; Get the return address
@@ -201,7 +224,7 @@ calc_addr
         TAX
 
         setas
-        LDA #`PrintTraceAXY
+        LDA #`PrintMemory
         PHA
         PLB
 
@@ -227,19 +250,15 @@ calc_addr
         TAX
         LDY #0
 
-        SETAS
-        LDA #' '
-        CALL ScreenPutChar
+        PrintChar ' '
         LDA TraceMemoryStart + 2
         JSL PRINTAH
-        LDA #':'
-        CALL ScreenPutChar
+        PrintChar ':'
         LDA TraceMemoryStart + 1
         JSL PRINTAH
         LDA TraceMemoryStart
         JSL PRINTAH
-        LDA #' '
-        CALL ScreenPutChar
+        PrintChar ' '
 
 loop
         LDA [TraceMemoryStart], Y
@@ -248,27 +267,16 @@ loop
         DEX
         BEQ +
         INY
-
-        LDA #' '
-        CALL ScreenPutChar
+        PrintChar ' '
 
         BRA loop
-
 +
         SETAS
         LDA #13
         CALL ScreenPutChar
 
-        SETAXL
-        PLD
-        PLB
-        PLY
-        PLX
-        PLA
-        PLP
-        RTS
+        PullAll
         .pend
-
 
 ScreenPutChar .proc
         PHP
@@ -291,3 +299,5 @@ loop
         PLP
         RETURN
         .pend
+
+.endif

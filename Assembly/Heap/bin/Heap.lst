@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.55.2200 listing file
 ; 64tass.exe --long-address --flat -b --m65816 --intel-hex -oHeap\bin\Heap.hex --list=Heap\bin\Heap.lst --labels=Heap\bin\Heap.lbl .\Heap\Heap.asm
-; Mon Feb 22 15:19:20 2021
+; Mon Feb 22 19:40:48 2021
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -66,74 +66,41 @@
 
 ;******  Return to file: .\Heap\Heap.asm
 
-.0e0000					START:
-.0e0000	20 2d 03	jsr $0e032d	            JSR SETUP
+.0e0000					Main:
+.0e0000	20 77 03	jsr $0e0377	            JSR SETUP
 .0e0003	c2 30		rep #$30	            REP #$30
 .0e0005	08		php		            PHP
 .0e0006	e2 20		sep #$20	            SEP #$20
 .0e0008	48		pha		            PHA
-.0e0009	a9 0e		lda #$0e	            LDA #`Strings.Ready
+.0e0009	a9 0e		lda #$0e	            LDA #`Strings.Version
 .0e000b	48		pha		            PHA
 .0e000c	ab		plb		            PLB
 .0e000d	68		pla		            PLA
 .0e000e	28		plp		            PLP
-.0e000f	a2 ad 04	ldx #$04ad	                LDX #<>Strings.Ready               ; Point to the message in an ASCIIZ string
+.0e000f	a2 a9 05	ldx #$05a9	                LDX #<>Strings.Version               ; Point to the message in an ASCIIZ string
 .0e0012	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
 .0e0016	c2 30		rep #$30	            REP #$30
-.0e0018	a9 34 12	lda #$1234	    LDA #$1234
-.0e001b	a2 78 56	ldx #$5678	    LDX #$5678
-.0e001e	a0 ab 90	ldy #$90ab	    LDY #$90AB
-.0e0021	20 72 03	jsr $0e0372	    JSR PrintTraceAXY
-.0e0024	80 11		bra $0e0037	    BRA +
->0e0026	20 20 20 54 65 73 74 20		    .NULL "   ", "Test TraceAXY"
->0e002e	54 72 61 63 65 41 58 59 00
-.0e0037					+
-.0e0037	20 2d 01	jsr $0e012d	            JSR HeapManager.UnitTests.Init
-.0e003a	20 f2 01	jsr $0e01f2	            JSR HeapManager.UnitTests.ResetCurrentBlock
-.0e003d	20 47 03	jsr $0e0347	    JSR PrintTrace
-.0e0040	80 18		bra $0e005a	    BRA +
->0e0042	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.ZeroPage"
->0e004a	61 6e 61 67 65 72 2e 5a 65 72 6f 50 61 67 65 00
-.0e005a					+
-.0e005a	20 1b 04	jsr $0e041b	    JSR PrintMemory
-.0e005d	80 05		bra $0e0064	    BRA +
->0e005f	a0 08 00			    .LONG $0008A0
->0e0062	06 00				    .WORD 6
-.0e0064					+
-.0e0064	20 47 03	jsr $0e0347	    JSR PrintTrace
-.0e0067	80 16		bra $0e007f	    BRA +
->0e0069	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.Header"
->0e0071	61 6e 61 67 65 72 2e 48 65 61 64 65 72 00
-.0e007f					+
-.0e007f	20 1b 04	jsr $0e041b	    JSR PrintMemory
-.0e0082	80 05		bra $0e0089	    BRA +
->0e0084	00 00 0f			    .LONG HEAP_PAGE_START
->0e0087	0e 00				    .WORD SIZE(HeapManager.Header)
-.0e0089					+
-.0e0089	c2 20		rep #$20	            REP #$20
-.0e008b	a5 a3		lda $a3		    LDA HeapManager.ZeroPage.BlockPointer
-.0e008d	20 47 03	jsr $0e0347	    JSR PrintTrace
-.0e0090	80 15		bra $0e00a7	    BRA +
->0e0092	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.Block"
->0e009a	61 6e 61 67 65 72 2e 42 6c 6f 63 6b 00
-.0e00a7					+
-.0e00a7	8d af 00	sta $0e00af	    STA Address
-.0e00aa	20 1b 04	jsr $0e041b	    JSR PrintMemory
-.0e00ad	80 05		bra $0e00b4	    BRA +
-.0e00af					Address
->0e00af	00 00				    .WORD 0
->0e00b1	0f				    .BYTE `HEAP_PAGE_START
->0e00b2	08 00				    .WORD SIZE(HeapManager.BlockHeader)
-.0e00b4					+
-.0e00b4	6b		rtl		    RTL
+.0e0018	08		php		            PHP
+.0e0019	e2 20		sep #$20	            SEP #$20
+.0e001b	48		pha		            PHA
+.0e001c	a9 0e		lda #$0e	            LDA #`Strings.Ready
+.0e001e	48		pha		            PHA
+.0e001f	ab		plb		            PLB
+.0e0020	68		pla		            PLA
+.0e0021	28		plp		            PLP
+.0e0022	a2 ba 05	ldx #$05ba	                LDX #<>Strings.Ready               ; Point to the message in an ASCIIZ string
+.0e0025	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e0029	20 a8 00	jsr $0e00a8	            JSR HeapManager.UnitTests.Init
+.0e002c	20 91 01	jsr $0e0191	            JSR HeapManager.UnitTests.ResetCurrentBlock
+.0e002f	6b		rtl		    RTL
 
 ;******  Processing file: .\Heap\HeapManager.asm
 
-.0e00b5					HeapManager
+.0e0030					HeapManager
 
 ;******  Processing file: .\Heap\HeapManager_Data.asm
 
-.0e00b5					ZeroPage
+.0e0030					ZeroPage
 =$a0					    HeaderPointer       = $a0 ;.long ?
 =$a3					    BlockPointer        = $a3 ;.long ?
 =$a6					    RequestedSize       = $a6 ;.word ?
@@ -160,528 +127,713 @@
 
 ;******  Processing file: .\Heap\HeapManager_Private.asm
 
-.0e00b5					Private
+.0e0030					Private
 
 ;******  Return to file: .\Heap\HeapManager.asm
 
 
 ;******  Processing file: .\Heap\HeapManager_UnitTests.asm
 
-.0e00b5					UnitTests
-.0e00b5					Strings
->0e00b5	48 65 61 70 4d 61 6e 61		    Strings.Init:                .NULL "HeapManager.Init "
->0e00bd	67 65 72 2e 49 6e 69 74 20 00
->0e00c7	48 65 61 70 4d 61 6e 61		    Strings.ResetCurrentBlock:   .NULL "HeapManager.ResetCurrentBlock "
->0e00cf	67 65 72 2e 52 65 73 65 74 43 75 72 72 65 6e 74
->0e00df	42 6c 6f 63 6b 20 00
->0e00e6	48 65 61 70 4d 61 6e 61		    Strings.EmptyHeapMoves:      .NULL "HeapManager.EmptyHeapMoves "
->0e00ee	67 65 72 2e 45 6d 70 74 79 48 65 61 70 4d 6f 76
->0e00fe	65 73 20 00
->0e0102	50 61 73 73 65 64 0d 00		    Strings.Passed:              .NULL "Passed", 13
->0e010a	20 2d 20 46 61 69 6c 65		    Strings.Failed:              .NULL " - Failed", 13
->0e0112	64 0d 00
-.0e0115					FailedUnitTest
-.0e0115	22 80 10 00	jsl $001080	    JSL PRINTAH
-.0e0119	c2 30		rep #$30	            REP #$30
-.0e011b	08		php		            PHP
-.0e011c	e2 20		sep #$20	            SEP #$20
-.0e011e	48		pha		            PHA
-.0e011f	a9 0e		lda #$0e	            LDA #`Strings.Failed
-.0e0121	48		pha		            PHA
-.0e0122	ab		plb		            PLB
-.0e0123	68		pla		            PLA
-.0e0124	28		plp		            PLP
-.0e0125	a2 0a 01	ldx #$010a	                LDX #<>Strings.Failed               ; Point to the message in an ASCIIZ string
-.0e0128	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e0030					UnitTests
+.0e0030					Strings
+>0e0030	48 65 61 70 4d 61 6e 61		    Strings.Init:                .NULL "HeapManager.Init "
+>0e0038	67 65 72 2e 49 6e 69 74 20 00
+>0e0042	48 65 61 70 4d 61 6e 61		    Strings.ResetCurrentBlock:   .NULL "HeapManager.ResetCurrentBlock "
+>0e004a	67 65 72 2e 52 65 73 65 74 43 75 72 72 65 6e 74
+>0e005a	42 6c 6f 63 6b 20 00
+>0e0061	48 65 61 70 4d 61 6e 61		    Strings.EmptyHeapMoves:      .NULL "HeapManager.EmptyHeapMoves "
+>0e0069	67 65 72 2e 45 6d 70 74 79 48 65 61 70 4d 6f 76
+>0e0079	65 73 20 00
+>0e007d	50 61 73 73 65 64 0d 00		    Strings.Passed:              .NULL "Passed", 13
+>0e0085	20 2d 20 46 61 69 6c 65		    Strings.Failed:              .NULL " - Failed", 13
+>0e008d	64 0d 00
+.0e0090					FailedUnitTest
+.0e0090	22 80 10 00	jsl $001080	    JSL PRINTAH
+.0e0094	c2 30		rep #$30	            REP #$30
+.0e0096	08		php		            PHP
+.0e0097	e2 20		sep #$20	            SEP #$20
+.0e0099	48		pha		            PHA
+.0e009a	a9 0e		lda #$0e	            LDA #`Strings.Failed
+.0e009c	48		pha		            PHA
+.0e009d	ab		plb		            PLB
+.0e009e	68		pla		            PLA
+.0e009f	28		plp		            PLP
+.0e00a0	a2 85 00	ldx #$0085	                LDX #<>Strings.Failed               ; Point to the message in an ASCIIZ string
+.0e00a3	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e00a7	60		rts		            RTS
+.0e00a8					Init
+.0e00a8	20 a2 03	jsr $0e03a2	    JSR PrintTrace
+.0e00ab	80 1f		bra $0e00cc	    BRA +
+>0e00ad	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.UnitTests.Init", 13
+>0e00b5	61 6e 61 67 65 72 2e 55 6e 69 74 54 65 73 74 73
+>0e00c5	2e 49 6e 69 74 0d 00
+.0e00cc					+
+.0e00cc	c2 20		rep #$20	            REP #$20
+.0e00ce	a9 00 00	lda #$0000	    LDA #0
+.0e00d1	e2 20		sep #$20	            SEP #$20
+.0e00d3	c2 10		rep #$10	            REP #$10
+.0e00d5	a9 0f		lda #$0f	    LDA #`HEAP_PAGE_START
+.0e00d7	a2 00 00	ldx #$0000	    LDX #<>HEAP_PAGE_START
+.0e00da	a0 ff ff	ldy #$ffff	    LDY #<>HEAP_PAGE_END
+.0e00dd	20 d9 01	jsr $0e01d9	            JSR HeapManager.Init
+.0e00e0	c2 30		rep #$30	            REP #$30
+.0e00e2	08		php		            PHP
+.0e00e3	e2 20		sep #$20	            SEP #$20
+.0e00e5	48		pha		            PHA
+.0e00e6	a9 0e		lda #$0e	            LDA #`Strings.Init
+.0e00e8	48		pha		            PHA
+.0e00e9	ab		plb		            PLB
+.0e00ea	68		pla		            PLA
+.0e00eb	28		plp		            PLP
+.0e00ec	a2 30 00	ldx #$0030	                LDX #<>Strings.Init               ; Point to the message in an ASCIIZ string
+.0e00ef	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e00f3	e2 20		sep #$20	            SEP #$20
+.0e00f5	a0 02 00	ldy #$0002	    LDY #HeapManager.Header.Start + 2
+.0e00f8	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
+.0e00fa	c9 0f		cmp #$0f	    CMP #`HEAP_PAGE_START
+.0e00fc	f0 08		beq $0e0106	    BEQ +
+.0e00fe	e2 20		sep #$20	            SEP #$20
+.0e0100	a9 00		lda #$00	    LDA #0
+.0e0102	20 90 00	jsr $0e0090	            JSR FailedUnitTest
+.0e0105	60		rts		            RTS
+.0e0106					+
+.0e0106	c2 20		rep #$20	            REP #$20
+.0e0108	a0 00 00	ldy #$0000	    LDY #HeapManager.Header.Start
+.0e010b	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
+.0e010d	c9 00 00	cmp #$0000	    CMP #<>HEAP_PAGE_START
+.0e0110	f0 08		beq $0e011a	    BEQ +
+.0e0112	e2 20		sep #$20	            SEP #$20
+.0e0114	a9 01		lda #$01	    LDA #1
+.0e0116	20 90 00	jsr $0e0090	            JSR FailedUnitTest
+.0e0119	60		rts		            RTS
+.0e011a					+
+.0e011a	e2 20		sep #$20	            SEP #$20
+.0e011c	a0 05 00	ldy #$0005	    LDY #HeapManager.Header.End + 2
+.0e011f	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
+.0e0121	c9 0f		cmp #$0f	    CMP #`HEAP_PAGE_END
+.0e0123	f0 08		beq $0e012d	    BEQ +
+.0e0125	e2 20		sep #$20	            SEP #$20
+.0e0127	a9 02		lda #$02	    LDA #2
+.0e0129	20 90 00	jsr $0e0090	            JSR FailedUnitTest
 .0e012c	60		rts		            RTS
-.0e012d					Init
+.0e012d					+
 .0e012d	c2 20		rep #$20	            REP #$20
-.0e012f	a9 00 00	lda #$0000	    LDA #0
-.0e0132	e2 20		sep #$20	            SEP #$20
-.0e0134	c2 10		rep #$10	            REP #$10
-.0e0136	a9 0f		lda #$0f	    LDA #`HEAP_PAGE_START
-.0e0138	a2 00 00	ldx #$0000	    LDX #<>HEAP_PAGE_START
-.0e013b	a0 ff ff	ldy #$ffff	    LDY #<>HEAP_PAGE_END
-.0e013e	20 3a 02	jsr $0e023a	            JSR HeapManager.Init
-.0e0141	c2 30		rep #$30	            REP #$30
-.0e0143	08		php		            PHP
-.0e0144	e2 20		sep #$20	            SEP #$20
-.0e0146	48		pha		            PHA
-.0e0147	a9 0e		lda #$0e	            LDA #`Strings.Init
-.0e0149	48		pha		            PHA
-.0e014a	ab		plb		            PLB
-.0e014b	68		pla		            PLA
-.0e014c	28		plp		            PLP
-.0e014d	a2 b5 00	ldx #$00b5	                LDX #<>Strings.Init               ; Point to the message in an ASCIIZ string
-.0e0150	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
-.0e0154	e2 20		sep #$20	            SEP #$20
-.0e0156	a0 02 00	ldy #$0002	    LDY #HeapManager.Header.Start + 2
-.0e0159	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
-.0e015b	c9 0f		cmp #$0f	    CMP #`HEAP_PAGE_START
-.0e015d	f0 08		beq $0e0167	    BEQ +
-.0e015f	e2 20		sep #$20	            SEP #$20
-.0e0161	a9 00		lda #$00	    LDA #0
-.0e0163	20 15 01	jsr $0e0115	            JSR FailedUnitTest
-.0e0166	60		rts		            RTS
-.0e0167					+
-.0e0167	c2 20		rep #$20	            REP #$20
-.0e0169	a0 00 00	ldy #$0000	    LDY #HeapManager.Header.Start
-.0e016c	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
-.0e016e	c9 00 00	cmp #$0000	    CMP #<>HEAP_PAGE_START
-.0e0171	f0 08		beq $0e017b	    BEQ +
-.0e0173	e2 20		sep #$20	            SEP #$20
-.0e0175	a9 01		lda #$01	    LDA #1
-.0e0177	20 15 01	jsr $0e0115	            JSR FailedUnitTest
-.0e017a	60		rts		            RTS
-.0e017b					+
-.0e017b	e2 20		sep #$20	            SEP #$20
-.0e017d	a0 05 00	ldy #$0005	    LDY #HeapManager.Header.End + 2
-.0e0180	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
-.0e0182	c9 0f		cmp #$0f	    CMP #`HEAP_PAGE_END
-.0e0184	f0 08		beq $0e018e	    BEQ +
-.0e0186	e2 20		sep #$20	            SEP #$20
-.0e0188	a9 02		lda #$02	    LDA #2
-.0e018a	20 15 01	jsr $0e0115	            JSR FailedUnitTest
-.0e018d	60		rts		            RTS
-.0e018e					+
-.0e018e	c2 20		rep #$20	            REP #$20
-.0e0190	a0 03 00	ldy #$0003	    LDY #HeapManager.Header.End
-.0e0193	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
-.0e0195	c9 ff ff	cmp #$ffff	    CMP #<>HEAP_PAGE_END
-.0e0198	f0 08		beq $0e01a2	    BEQ +
-.0e019a	e2 20		sep #$20	            SEP #$20
-.0e019c	a9 03		lda #$03	    LDA #3
-.0e019e	20 15 01	jsr $0e0115	            JSR FailedUnitTest
-.0e01a1	60		rts		            RTS
-.0e01a2					+
-.0e01a2	c2 20		rep #$20	            REP #$20
-.0e01a4	a0 06 00	ldy #$0006	    LDY #HeapManager.Header.TotalSize
-.0e01a7	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
-.0e01a9	c9 f1 ff	cmp #$fff1	    CMP #(<>HEAP_PAGE_END - <>HEAP_PAGE_START) - SIZE(HeapManager.Header)
-.0e01ac	f0 08		beq $0e01b6	    BEQ +
-.0e01ae	e2 20		sep #$20	            SEP #$20
-.0e01b0	a9 04		lda #$04	    LDA #4
-.0e01b2	20 15 01	jsr $0e0115	            JSR FailedUnitTest
-.0e01b5	60		rts		            RTS
-.0e01b6					+
-.0e01b6	e2 20		sep #$20	            SEP #$20
-.0e01b8	a0 0a 00	ldy #$000a	    LDY #HeapManager.Header.FirstBlock + 2
-.0e01bb	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
-.0e01bd	c9 0f		cmp #$0f	    CMP #`HEAP_PAGE_START
-.0e01bf	f0 08		beq $0e01c9	    BEQ +
-.0e01c1	e2 20		sep #$20	            SEP #$20
-.0e01c3	a9 05		lda #$05	    LDA #5
-.0e01c5	20 15 01	jsr $0e0115	            JSR FailedUnitTest
-.0e01c8	60		rts		            RTS
-.0e01c9					+
-.0e01c9	c2 20		rep #$20	            REP #$20
-.0e01cb	a0 08 00	ldy #$0008	    LDY #HeapManager.Header.FirstBlock
-.0e01ce	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
-.0e01d0	c9 0e 00	cmp #$000e	    CMP #(<>HEAP_PAGE_START + SIZE(HeapManager.Header))
-.0e01d3	f0 08		beq $0e01dd	    BEQ +
-.0e01d5	e2 20		sep #$20	            SEP #$20
-.0e01d7	a9 06		lda #$06	    LDA #6
-.0e01d9	20 15 01	jsr $0e0115	            JSR FailedUnitTest
-.0e01dc	60		rts		            RTS
-.0e01dd					+
-.0e01dd	c2 30		rep #$30	            REP #$30
-.0e01df	08		php		            PHP
-.0e01e0	e2 20		sep #$20	            SEP #$20
-.0e01e2	48		pha		            PHA
-.0e01e3	a9 0e		lda #$0e	            LDA #`Strings.Passed
-.0e01e5	48		pha		            PHA
-.0e01e6	ab		plb		            PLB
-.0e01e7	68		pla		            PLA
-.0e01e8	28		plp		            PLP
-.0e01e9	a2 02 01	ldx #$0102	                LDX #<>Strings.Passed               ; Point to the message in an ASCIIZ string
-.0e01ec	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
-.0e01f0	60		rts		            RTS
-.0e01f1	60		rts		            RTS
-.0e01f2					ResetCurrentBlock
-.0e01f2	e2 20		sep #$20	            SEP #$20
-.0e01f4	c2 10		rep #$10	            REP #$10
-.0e01f6	a9 0f		lda #$0f	    LDA #`HEAP_PAGE_START
-.0e01f8	a2 00 00	ldx #$0000	    LDX #<>HEAP_PAGE_START
-.0e01fb	a0 ff ff	ldy #$ffff	    LDY #<>HEAP_PAGE_END
-.0e01fe	c2 30		rep #$30	            REP #$30
-.0e0200	08		php		            PHP
-.0e0201	e2 20		sep #$20	            SEP #$20
-.0e0203	48		pha		            PHA
-.0e0204	a9 0e		lda #$0e	            LDA #`Strings.ResetCurrentBlock
-.0e0206	48		pha		            PHA
-.0e0207	ab		plb		            PLB
-.0e0208	68		pla		            PLA
-.0e0209	28		plp		            PLP
-.0e020a	a2 c7 00	ldx #$00c7	                LDX #<>Strings.ResetCurrentBlock               ; Point to the message in an ASCIIZ string
-.0e020d	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
-.0e0211	c2 30		rep #$30	            REP #$30
-.0e0213	08		php		            PHP
-.0e0214	e2 20		sep #$20	            SEP #$20
-.0e0216	48		pha		            PHA
-.0e0217	a9 0e		lda #$0e	            LDA #`Strings.Passed
-.0e0219	48		pha		            PHA
-.0e021a	ab		plb		            PLB
-.0e021b	68		pla		            PLA
-.0e021c	28		plp		            PLP
-.0e021d	a2 02 01	ldx #$0102	                LDX #<>Strings.Passed               ; Point to the message in an ASCIIZ string
-.0e0220	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
-.0e0224	80 13		bra $0e0239	    BRA +
-.0e0226					FAILED:
-.0e0226	c2 30		rep #$30	            REP #$30
-.0e0228	08		php		            PHP
-.0e0229	e2 20		sep #$20	            SEP #$20
-.0e022b	48		pha		            PHA
-.0e022c	a9 0e		lda #$0e	            LDA #`Strings.Failed
-.0e022e	48		pha		            PHA
-.0e022f	ab		plb		            PLB
-.0e0230	68		pla		            PLA
-.0e0231	28		plp		            PLP
-.0e0232	a2 0a 01	ldx #$010a	                LDX #<>Strings.Failed               ; Point to the message in an ASCIIZ string
-.0e0235	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
-.0e0239					+
-.0e0239	60		rts		            RTS
+.0e012f	a0 03 00	ldy #$0003	    LDY #HeapManager.Header.End
+.0e0132	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
+.0e0134	c9 ff ff	cmp #$ffff	    CMP #<>HEAP_PAGE_END
+.0e0137	f0 08		beq $0e0141	    BEQ +
+.0e0139	e2 20		sep #$20	            SEP #$20
+.0e013b	a9 03		lda #$03	    LDA #3
+.0e013d	20 90 00	jsr $0e0090	            JSR FailedUnitTest
+.0e0140	60		rts		            RTS
+.0e0141					+
+.0e0141	c2 20		rep #$20	            REP #$20
+.0e0143	a0 06 00	ldy #$0006	    LDY #HeapManager.Header.TotalSize
+.0e0146	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
+.0e0148	c9 f1 ff	cmp #$fff1	    CMP #(<>HEAP_PAGE_END - <>HEAP_PAGE_START) - SIZE(HeapManager.Header)
+.0e014b	f0 08		beq $0e0155	    BEQ +
+.0e014d	e2 20		sep #$20	            SEP #$20
+.0e014f	a9 04		lda #$04	    LDA #4
+.0e0151	20 90 00	jsr $0e0090	            JSR FailedUnitTest
+.0e0154	60		rts		            RTS
+.0e0155					+
+.0e0155	e2 20		sep #$20	            SEP #$20
+.0e0157	a0 0a 00	ldy #$000a	    LDY #HeapManager.Header.FirstBlock + 2
+.0e015a	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
+.0e015c	c9 0f		cmp #$0f	    CMP #`HEAP_PAGE_START
+.0e015e	f0 08		beq $0e0168	    BEQ +
+.0e0160	e2 20		sep #$20	            SEP #$20
+.0e0162	a9 05		lda #$05	    LDA #5
+.0e0164	20 90 00	jsr $0e0090	            JSR FailedUnitTest
+.0e0167	60		rts		            RTS
+.0e0168					+
+.0e0168	c2 20		rep #$20	            REP #$20
+.0e016a	a0 08 00	ldy #$0008	    LDY #HeapManager.Header.FirstBlock
+.0e016d	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
+.0e016f	c9 0e 00	cmp #$000e	    CMP #(<>HEAP_PAGE_START + SIZE(HeapManager.Header))
+.0e0172	f0 08		beq $0e017c	    BEQ +
+.0e0174	e2 20		sep #$20	            SEP #$20
+.0e0176	a9 06		lda #$06	    LDA #6
+.0e0178	20 90 00	jsr $0e0090	            JSR FailedUnitTest
+.0e017b	60		rts		            RTS
+.0e017c					+
+.0e017c	c2 30		rep #$30	            REP #$30
+.0e017e	08		php		            PHP
+.0e017f	e2 20		sep #$20	            SEP #$20
+.0e0181	48		pha		            PHA
+.0e0182	a9 0e		lda #$0e	            LDA #`Strings.Passed
+.0e0184	48		pha		            PHA
+.0e0185	ab		plb		            PLB
+.0e0186	68		pla		            PLA
+.0e0187	28		plp		            PLP
+.0e0188	a2 7d 00	ldx #$007d	                LDX #<>Strings.Passed               ; Point to the message in an ASCIIZ string
+.0e018b	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e018f	60		rts		            RTS
+.0e0190	60		rts		            RTS
+.0e0191					ResetCurrentBlock
+.0e0191	e2 20		sep #$20	            SEP #$20
+.0e0193	c2 10		rep #$10	            REP #$10
+.0e0195	a9 0f		lda #$0f	    LDA #`HEAP_PAGE_START
+.0e0197	a2 00 00	ldx #$0000	    LDX #<>HEAP_PAGE_START
+.0e019a	a0 ff ff	ldy #$ffff	    LDY #<>HEAP_PAGE_END
+.0e019d	c2 30		rep #$30	            REP #$30
+.0e019f	08		php		            PHP
+.0e01a0	e2 20		sep #$20	            SEP #$20
+.0e01a2	48		pha		            PHA
+.0e01a3	a9 0e		lda #$0e	            LDA #`Strings.ResetCurrentBlock
+.0e01a5	48		pha		            PHA
+.0e01a6	ab		plb		            PLB
+.0e01a7	68		pla		            PLA
+.0e01a8	28		plp		            PLP
+.0e01a9	a2 42 00	ldx #$0042	                LDX #<>Strings.ResetCurrentBlock               ; Point to the message in an ASCIIZ string
+.0e01ac	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e01b0	c2 30		rep #$30	            REP #$30
+.0e01b2	08		php		            PHP
+.0e01b3	e2 20		sep #$20	            SEP #$20
+.0e01b5	48		pha		            PHA
+.0e01b6	a9 0e		lda #$0e	            LDA #`Strings.Passed
+.0e01b8	48		pha		            PHA
+.0e01b9	ab		plb		            PLB
+.0e01ba	68		pla		            PLA
+.0e01bb	28		plp		            PLP
+.0e01bc	a2 7d 00	ldx #$007d	                LDX #<>Strings.Passed               ; Point to the message in an ASCIIZ string
+.0e01bf	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e01c3	80 13		bra $0e01d8	    BRA +
+.0e01c5					FAILED:
+.0e01c5	c2 30		rep #$30	            REP #$30
+.0e01c7	08		php		            PHP
+.0e01c8	e2 20		sep #$20	            SEP #$20
+.0e01ca	48		pha		            PHA
+.0e01cb	a9 0e		lda #$0e	            LDA #`Strings.Failed
+.0e01cd	48		pha		            PHA
+.0e01ce	ab		plb		            PLB
+.0e01cf	68		pla		            PLA
+.0e01d0	28		plp		            PLP
+.0e01d1	a2 85 00	ldx #$0085	                LDX #<>Strings.Failed               ; Point to the message in an ASCIIZ string
+.0e01d4	22 1c 10 00	jsl $00101c	                JSL PUTS                 ; And ask the kernel to print it
+.0e01d8					+
+.0e01d8	60		rts		            RTS
 
 ;******  Return to file: .\Heap\HeapManager.asm
 
-.0e023a					Init
-.0e023a	20 72 03	jsr $0e0372	    JSR PrintTraceAXY
-.0e023d	80 14		bra $0e0253	    BRA +
->0e023f	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.Init"
->0e0247	61 6e 61 67 65 72 2e 49 6e 69 74 00
-.0e0253					+
-.0e0253	48		pha		    PHA
-.0e0254	da		phx		    PHX
-.0e0255	5a		phy		    PHY
-.0e0256	08		php		    PHP
-.0e0257	5a		phy		    PHY
-.0e0258	20 d4 02	jsr $0e02d4	            JSR SetupZeroPage
-.0e025b	e2 20		sep #$20	            SEP #$20
-.0e025d	85 a5		sta $a5		    STA ZeroPage.BlockPointer + 2 ; ZP_HEAP_MANAGER_BLOCK_POINTER + 2
-.0e025f	c2 20		rep #$20	            REP #$20
-.0e0261	8a		txa		    TXA
-.0e0262	18		clc		    CLC
-.0e0263	69 0e 00	adc #$000e	    ADC #SIZE(Header)
-.0e0266	85 a3		sta $a3		    STA ZeroPage.BlockPointer
-.0e0268	c2 20		rep #$20	            REP #$20
-.0e026a	a5 a0		lda $a0		    LDA ZeroPage.HeaderPointer ; ZP_HEAP_MANAGER_HEADER_POINTER
-.0e026c	a0 00 00	ldy #$0000	    LDY #Header.Start
-.0e026f	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
-.0e0271	e2 20		sep #$20	            SEP #$20
-.0e0273	a5 a2		lda $a2		    LDA ZeroPage.HeaderPointer + 2
-.0e0275	a0 02 00	ldy #$0002	    LDY #Header.Start + 2
-.0e0278	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
-.0e027a	c2 20		rep #$20	            REP #$20
-.0e027c	68		pla		    PLA
-.0e027d	a0 03 00	ldy #$0003	    LDY #Header.End
-.0e0280	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
-.0e0282	e2 20		sep #$20	            SEP #$20
-.0e0284	a5 a2		lda $a2		    LDA ZeroPage.HeaderPointer + 2
-.0e0286	a0 05 00	ldy #$0005	    LDY #Header.End + 2
-.0e0289	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
-.0e028b	c2 20		rep #$20	            REP #$20
-.0e028d	a0 03 00	ldy #$0003	    LDY #Header.End
-.0e0290	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
-.0e0292	38		sec		    SEC
-.0e0293	e5 a0		sbc $a0		    SBC ZeroPage.HeaderPointer  ; This is equal to HEAP_MANAGER_START
-.0e0295	e9 0e 00	sbc #$000e	    SBC #SIZE(Header)
-.0e0298	a0 06 00	ldy #$0006	    LDY #Header.TotalSize
-.0e029b	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
-.0e029d	e2 20		sep #$20	            SEP #$20
-.0e029f	a5 a5		lda $a5		    LDA ZeroPage.BlockPointer + 2
-.0e02a1	a0 0a 00	ldy #$000a	    LDY #Header.FirstBlock + 2
-.0e02a4	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
-.0e02a6	c2 20		rep #$20	            REP #$20
-.0e02a8	a5 a3		lda $a3		    LDA ZeroPage.BlockPointer
-.0e02aa	a0 08 00	ldy #$0008	    LDY #Header.FirstBlock
-.0e02ad	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
-.0e02af	a9 00 00	lda #$0000	    LDA #0
-.0e02b2	a0 00 00	ldy #$0000	    LDY #BlockHeader.PrevBlock
-.0e02b5	97 a3		sta [$a3],y	    STA [ZeroPage.BlockPointer], Y
-.0e02b7	a0 02 00	ldy #$0002	    LDY #BlockHeader.NextBlock
-.0e02ba	97 a3		sta [$a3],y	    STA [ZeroPage.BlockPointer], Y
-.0e02bc	a0 04 00	ldy #$0004	    LDY #BlockHeader.RefCount
-.0e02bf	97 a3		sta [$a3],y	    STA [ZeroPage.BlockPointer], Y
-.0e02c1	a0 06 00	ldy #$0006	    LDY #Header.TotalSize
-.0e02c4	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
-.0e02c6	38		sec		    SEC
-.0e02c7	e9 08 00	sbc #$0008	    SBC #SIZE(BlockHeader)
-.0e02ca	a0 06 00	ldy #$0006	    LDY #BlockHeader.Size
-.0e02cd	97 a3		sta [$a3],y	    STA [ZeroPage.BlockPointer], Y
-.0e02cf	28		plp		    PLP
-.0e02d0	7a		ply		    PLY
-.0e02d1	fa		plx		    PLX
-.0e02d2	68		pla		    PLA
-.0e02d3	60		rts		            RTS
-.0e02d4					SetupZeroPage
-.0e02d4	20 47 03	jsr $0e0347	    JSR PrintTrace
-.0e02d7	80 1e		bra $0e02f7	    BRA +
->0e02d9	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.SetupZeroPage", 13
->0e02e1	61 6e 61 67 65 72 2e 53 65 74 75 70 5a 65 72 6f
->0e02f1	50 61 67 65 0d 00
-.0e02f7					+
-.0e02f7	48		pha		    PHA
-.0e02f8	da		phx		    PHX
-.0e02f9	5a		phy		    PHY
-.0e02fa	08		php		    PHP
-.0e02fb	e2 20		sep #$20	            SEP #$20
-.0e02fd	85 a2		sta $a2		    STA ZeroPage.HeaderPointer + 2
-.0e02ff	c2 20		rep #$20	            REP #$20
-.0e0301	8a		txa		    TXA
-.0e0302	85 a0		sta $a0		    STA ZeroPage.HeaderPointer
-.0e0304	28		plp		    PLP
-.0e0305	7a		ply		    PLY
-.0e0306	fa		plx		    PLX
-.0e0307	68		pla		    PLA
-.0e0308	60		rts		            RTS
+.0e01d9					Init
+.0e01d9	20 5a 04	jsr $0e045a	    JSR PrintTraceAXY
+.0e01dc	80 14		bra $0e01f2	    BRA +
+>0e01de	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.Init"
+>0e01e6	61 6e 61 67 65 72 2e 49 6e 69 74 00
+.0e01f2					+
+.0e01f2	08		php		        PHP
+.0e01f3	c2 30		rep #$30	            REP #$30
+.0e01f5	48		pha		        PHA
+.0e01f6	da		phx		        PHX
+.0e01f7	5a		phy		        PHY
+.0e01f8	8b		phb		        PHB
+.0e01f9	0b		phd		        PHD
+.0e01fa	5a		phy		    PHY
+.0e01fb	20 16 03	jsr $0e0316	            JSR SetupZeroPage
+.0e01fe	e2 20		sep #$20	            SEP #$20
+.0e0200	85 a5		sta $a5		    STA ZeroPage.BlockPointer + 2 ; ZP_HEAP_MANAGER_BLOCK_POINTER + 2
+.0e0202	c2 20		rep #$20	            REP #$20
+.0e0204	8a		txa		    TXA
+.0e0205	18		clc		    CLC
+.0e0206	69 0e 00	adc #$000e	    ADC #SIZE(Header)
+.0e0209	85 a3		sta $a3		    STA ZeroPage.BlockPointer
+.0e020b	c2 20		rep #$20	            REP #$20
+.0e020d	a5 a0		lda $a0		    LDA ZeroPage.HeaderPointer ; ZP_HEAP_MANAGER_HEADER_POINTER
+.0e020f	a0 00 00	ldy #$0000	    LDY #Header.Start
+.0e0212	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
+.0e0214	e2 20		sep #$20	            SEP #$20
+.0e0216	a5 a2		lda $a2		    LDA ZeroPage.HeaderPointer + 2
+.0e0218	a0 02 00	ldy #$0002	    LDY #Header.Start + 2
+.0e021b	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
+.0e021d	c2 20		rep #$20	            REP #$20
+.0e021f	68		pla		    PLA
+.0e0220	a0 03 00	ldy #$0003	    LDY #Header.End
+.0e0223	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
+.0e0225	e2 20		sep #$20	            SEP #$20
+.0e0227	a5 a2		lda $a2		    LDA ZeroPage.HeaderPointer + 2
+.0e0229	a0 05 00	ldy #$0005	    LDY #Header.End + 2
+.0e022c	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
+.0e022e	c2 20		rep #$20	            REP #$20
+.0e0230	a0 03 00	ldy #$0003	    LDY #Header.End
+.0e0233	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
+.0e0235	38		sec		    SEC
+.0e0236	e5 a0		sbc $a0		    SBC ZeroPage.HeaderPointer
+.0e0238	38		sec		    SEC
+.0e0239	e9 0e 00	sbc #$000e	    SBC #SIZE(Header)
+.0e023c	a0 06 00	ldy #$0006	    LDY #Header.TotalSize
+.0e023f	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
+.0e0241	e2 20		sep #$20	            SEP #$20
+.0e0243	a5 a5		lda $a5		    LDA ZeroPage.BlockPointer + 2
+.0e0245	a0 0a 00	ldy #$000a	    LDY #Header.FirstBlock + 2
+.0e0248	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
+.0e024a	c2 20		rep #$20	            REP #$20
+.0e024c	a5 a3		lda $a3		    LDA ZeroPage.BlockPointer
+.0e024e	a0 08 00	ldy #$0008	    LDY #Header.FirstBlock
+.0e0251	97 a0		sta [$a0],y	    STA [ZeroPage.HeaderPointer], Y
+.0e0253	a9 00 00	lda #$0000	    LDA #0
+.0e0256	a0 00 00	ldy #$0000	    LDY #BlockHeader.PrevBlock
+.0e0259	97 a3		sta [$a3],y	    STA [ZeroPage.BlockPointer], Y
+.0e025b	a0 02 00	ldy #$0002	    LDY #BlockHeader.NextBlock
+.0e025e	97 a3		sta [$a3],y	    STA [ZeroPage.BlockPointer], Y
+.0e0260	a0 04 00	ldy #$0004	    LDY #BlockHeader.RefCount
+.0e0263	97 a3		sta [$a3],y	    STA [ZeroPage.BlockPointer], Y
+.0e0265	a0 06 00	ldy #$0006	    LDY #Header.TotalSize
+.0e0268	b7 a0		lda [$a0],y	    LDA [ZeroPage.HeaderPointer], Y
+.0e026a	38		sec		    SEC
+.0e026b	e9 08 00	sbc #$0008	    SBC #SIZE(BlockHeader)
+.0e026e	a0 06 00	ldy #$0006	    LDY #BlockHeader.Size
+.0e0271	97 a3		sta [$a3],y	    STA [ZeroPage.BlockPointer], Y
+.0e0273	20 a2 03	jsr $0e03a2	    JSR PrintTrace
+.0e0276	80 18		bra $0e0290	    BRA +
+>0e0278	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.ZeroPage"
+>0e0280	61 6e 61 67 65 72 2e 5a 65 72 6f 50 61 67 65 00
+.0e0290					+
+.0e0290	20 11 05	jsr $0e0511	    JSR PrintMemory
+.0e0293	80 05		bra $0e029a	    BRA +
+>0e0295	a0 08 00			    .LONG $0008A0
+>0e0298	06 00				    .WORD 6
+.0e029a					+
+.0e029a	08		php		    PHP
+.0e029b	48		pha		    PHA
+.0e029c	e2 20		sep #$20	            SEP #$20
+.0e029e	a5 a2		lda $a2		    LDA HeapManager.ZeroPage.HeaderPointer + 2
+.0e02a0	8d d0 02	sta $0e02d0	    STA Address + 2
+.0e02a3	c2 20		rep #$20	            REP #$20
+.0e02a5	a5 a0		lda $a0		    LDA HeapManager.ZeroPage.HeaderPointer
+.0e02a7	8d ce 02	sta $0e02ce	    STA Address
+.0e02aa	68		pla		    PLA
+.0e02ab	28		plp		    PLP
+.0e02ac	20 a2 03	jsr $0e03a2	    JSR PrintTrace
+.0e02af	80 18		bra $0e02c9	    BRA +
+>0e02b1	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.Header  "
+>0e02b9	61 6e 61 67 65 72 2e 48 65 61 64 65 72 20 20 00
+.0e02c9					+
+.0e02c9	20 11 05	jsr $0e0511	    JSR PrintMemory
+.0e02cc	80 05		bra $0e02d3	    BRA +
+.0e02ce					Address
+>0e02ce	00 00 00			    .LONG 0
+>0e02d1	0e 00				    .WORD SIZE(HeapManager.Header)
+.0e02d3					+
+.0e02d3	08		php		    PHP
+.0e02d4	48		pha		    PHA
+.0e02d5	e2 20		sep #$20	            SEP #$20
+.0e02d7	a5 a5		lda $a5		    LDA HeapManager.ZeroPage.BlockPointer + 2
+.0e02d9	8d 09 03	sta $0e0309	    STA Address + 2
+.0e02dc	c2 20		rep #$20	            REP #$20
+.0e02de	a5 a3		lda $a3		    LDA HeapManager.ZeroPage.BlockPointer
+.0e02e0	8d 07 03	sta $0e0307	    STA Address
+.0e02e3	68		pla		    PLA
+.0e02e4	28		plp		    PLP
+.0e02e5	20 a2 03	jsr $0e03a2	    JSR PrintTrace
+.0e02e8	80 18		bra $0e0302	    BRA +
+>0e02ea	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.Block   "
+>0e02f2	61 6e 61 67 65 72 2e 42 6c 6f 63 6b 20 20 20 00
+.0e0302					+
+.0e0302	20 11 05	jsr $0e0511	    JSR PrintMemory
+.0e0305	80 05		bra $0e030c	    BRA +
+.0e0307					Address
+>0e0307	00 00 00			    .LONG 0
+>0e030a	08 00				    .WORD SIZE(HeapManager.BlockHeader)
+.0e030c					+
+.0e030c	c2 30		rep #$30	            REP #$30
+.0e030e	2b		pld		        PLD
+.0e030f	ab		plb		        PLB
+.0e0310	7a		ply		        PLY
+.0e0311	fa		plx		        PLX
+.0e0312	68		pla		        PLA
+.0e0313	28		plp		        PLP
+.0e0314	60		rts		        RTS
+.0e0315	60		rts		            RTS
+.0e0316					SetupZeroPage
+.0e0316	20 cd 03	jsr $0e03cd	    JSR PrintTraceAX
+.0e0319	80 1d		bra $0e0338	    BRA +
+>0e031b	20 20 20 48 65 61 70 4d		    .NULL "   ", "HeapManager.SetupZeroPage"
+>0e0323	61 6e 61 67 65 72 2e 53 65 74 75 70 5a 65 72 6f
+>0e0333	50 61 67 65 00
+.0e0338					+
+.0e0338	08		php		        PHP
+.0e0339	c2 30		rep #$30	            REP #$30
+.0e033b	48		pha		        PHA
+.0e033c	da		phx		        PHX
+.0e033d	5a		phy		        PHY
+.0e033e	8b		phb		        PHB
+.0e033f	0b		phd		        PHD
+.0e0340	e2 20		sep #$20	            SEP #$20
+.0e0342	85 a2		sta $a2		    STA ZeroPage.HeaderPointer + 2
+.0e0344	c2 20		rep #$20	            REP #$20
+.0e0346	8a		txa		    TXA
+.0e0347	85 a0		sta $a0		    STA ZeroPage.HeaderPointer
+.0e0349	c2 30		rep #$30	            REP #$30
+.0e034b	2b		pld		        PLD
+.0e034c	ab		plb		        PLB
+.0e034d	7a		ply		        PLY
+.0e034e	fa		plx		        PLX
+.0e034f	68		pla		        PLA
+.0e0350	28		plp		        PLP
+.0e0351	60		rts		        RTS
+.0e0352	60		rts		            RTS
 
 ;******  Return to file: .\Heap\Heap.asm
 
 
 ;******  Processing file: .\Heap\../Common/Common.asm
 
-.0e0309					RESET_SCREEN:
-.0e0309	e2 20		sep #$20	            SEP #$20
-.0e030b	c2 10		rep #$10	            REP #$10
-.0e030d	a2 00 00	ldx #$0000	        LDX #0
-.0e0310	a9 20		lda #$20	-       LDA #' '
-.0e0312	9f 00 a0 af	sta $afa000,x	        STA @l SCREEN_TEXT_MEM, X
-.0e0316	a9 20		lda #$20	        LDA #TEXT_COLOR
-.0e0318	9f 00 c0 af	sta $afc000,x	        STA @l SCREEN_TEXT_COL, X
-.0e031c	e8		inx		        INX
-.0e031d	e0 c0 12	cpx #$12c0	        CPX #(NUM_COLS * NUM_ROWS)
-.0e0320	d0 ee		bne $0e0310	        BNE -
-.0e0322	a2 00 00	ldx #$0000	        LDX #0
-.0e0325	a0 00 00	ldy #$0000	        LDY #0
-.0e0328	22 84 10 00	jsl $001084	        JSL LOCATE
-.0e032c	60		rts		            RTS
-.0e032d					SETUP:
-.0e032d	18		clc		        CLC                         ; Make sure we're native mode
-.0e032e	fb		xce		        XCE
-.0e032f	e2 20		sep #$20	            SEP #$20
-.0e0331	c2 10		rep #$10	            REP #$10
-.0e0333	a9 20		lda #$20	        LDA #TEXT_COLOR            ; Set the Text Color (Green Text on Black Background)
-.0e0335	8f 1e 00 00	sta $00001e	        STA @lCUR_COLOR             ; @l forces 24 bit addressing mode...
-.0e0339	a9 00		lda #$00	        LDA #$00                    ; Set to No Border
-.0e033b	8f 04 00 af	sta $af0004	        STA @lBORDER_CTRL_REG
-.0e033f	22 2c 11 00	jsl $00112c	        JSL FK_SETSIZES
-.0e0343	20 09 03	jsr $0e0309	            JSR RESET_SCREEN
-.0e0346	60		rts		            RTS
-.0e0347					PrintTrace
-.0e0347	08		php		        PHP
-.0e0348	c2 30		rep #$30	            REP #$30
-.0e034a	48		pha		        PHA
-.0e034b	da		phx		        PHX
-.0e034c	5a		phy		        PHY
-.0e034d	8b		phb		        PHB
-.0e034e	0b		phd		        PHD
-.0e034f	c2 30		rep #$30	            REP #$30
-.0e0351	a3 0b		lda $0b,s	        LDA 11,S        ; Get the return address
-.0e0353					calc_addr
-.0e0353	18		clc		        CLC
-.0e0354	69 03 00	adc #$0003	        ADC #3          ; Add 3 to skip over the following branch
-.0e0357	aa		tax		        TAX
-.0e0358	e2 20		sep #$20	            SEP #$20
-.0e035a	a9 0e		lda #$0e	        LDA #`PrintTrace
-.0e035c	48		pha		        PHA
-.0e035d	ab		plb		        PLB
-.0e035e					pr_loop
-.0e035e	bd 00 00	lda $0e0000,x	        LDA #0,B,X
-.0e0361	f0 06		beq $0e0369	        BEQ done
-.0e0363	20 92 04	jsr $0e0492	            JSR ScreenPutChar
+.0e0353					RESET_SCREEN
+.0e0353	e2 20		sep #$20	            SEP #$20
+.0e0355	c2 10		rep #$10	            REP #$10
+.0e0357	a2 00 00	ldx #$0000	        LDX #0
+.0e035a	a9 20		lda #$20	-       LDA #' '
+.0e035c	9f 00 a0 af	sta $afa000,x	        STA @l SCREEN_TEXT_MEM, X
+.0e0360	a9 20		lda #$20	        LDA #TEXT_COLOR
+.0e0362	9f 00 c0 af	sta $afc000,x	        STA @l SCREEN_TEXT_COL, X
 .0e0366	e8		inx		        INX
-.0e0367	80 f5		bra $0e035e	        BRA pr_loop
-.0e0369					done
-.0e0369	c2 30		rep #$30	            REP #$30
-.0e036b	2b		pld		        PLD
-.0e036c	ab		plb		        PLB
-.0e036d	7a		ply		        PLY
-.0e036e	fa		plx		        PLX
-.0e036f	68		pla		        PLA
-.0e0370	28		plp		        PLP
-.0e0371	60		rts		        RTS
-.0e0372					PrintTraceAXY
-.0e0372	08		php		        PHP
-.0e0373	c2 30		rep #$30	            REP #$30
-.0e0375	48		pha		        PHA
-.0e0376	da		phx		        PHX
-.0e0377	5a		phy		        PHY
-.0e0378	8b		phb		        PHB
-.0e0379	0b		phd		        PHD
-.0e037a	5a		phy		        PHY
+.0e0367	e0 c0 12	cpx #$12c0	        CPX #(NUM_COLS * NUM_ROWS)
+.0e036a	d0 ee		bne $0e035a	        BNE -
+.0e036c	a2 00 00	ldx #$0000	        LDX #0
+.0e036f	a0 00 00	ldy #$0000	        LDY #0
+.0e0372	22 84 10 00	jsl $001084	        JSL LOCATE
+.0e0376	60		rts		            RTS
+.0e0377					SETUP
+.0e0377	08		php		        PHP
+.0e0378	c2 30		rep #$30	            REP #$30
+.0e037a	48		pha		        PHA
 .0e037b	da		phx		        PHX
-.0e037c	48		pha		        PHA
-.0e037d	c2 30		rep #$30	            REP #$30
-.0e037f	a3 11		lda $11,s	        LDA 17,S        ; Get the return address
-.0e0381					calc_addr
-.0e0381	18		clc		        CLC
-.0e0382	69 03 00	adc #$0003	        ADC #3          ; Add 3 to skip over the following branch
-.0e0385	aa		tax		        TAX
-.0e0386	e2 20		sep #$20	            SEP #$20
-.0e0388	a9 0e		lda #$0e	        LDA #`PrintTraceAXY
-.0e038a	48		pha		        PHA
-.0e038b	ab		plb		        PLB
-.0e038c					pr_loop
-.0e038c	bd 00 00	lda $0e0000,x	        LDA #0,B,X
-.0e038f	f0 06		beq $0e0397	        BEQ done
-.0e0391	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e0394	e8		inx		        INX
-.0e0395	80 f5		bra $0e038c	        BRA pr_loop
-.0e0397					done
-.0e0397	e2 20		sep #$20	            SEP #$20
-.0e0399	a9 28		lda #$28	        LDA#'('
-.0e039b	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e039e	a9 41		lda #$41	        LDA#'A'
-.0e03a0	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e03a3	a9 3d		lda #$3d	        LDA#'='
-.0e03a5	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e03a8	c2 20		rep #$20	            REP #$20
-.0e03aa	68		pla		        PLA
-.0e03ab	48		pha		        PHA
-.0e03ac	e2 20		sep #$20	            SEP #$20
-.0e03ae	eb		xba		        XBA
-.0e03af	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e03b3	c2 20		rep #$20	            REP #$20
-.0e03b5	68		pla		        PLA
-.0e03b6	e2 20		sep #$20	            SEP #$20
-.0e03b8	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e03bc	e2 20		sep #$20	            SEP #$20
-.0e03be	a9 2c		lda #$2c	        LDA#','
-.0e03c0	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e03c3	a9 58		lda #$58	        LDA#'X'
-.0e03c5	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e03c8	a9 3d		lda #$3d	        LDA#'='
-.0e03ca	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e03cd	c2 20		rep #$20	            REP #$20
-.0e03cf	68		pla		        PLA
+.0e037c	5a		phy		        PHY
+.0e037d	8b		phb		        PHB
+.0e037e	0b		phd		        PHD
+.0e037f	18		clc		        CLC                         ; Make sure we're native mode
+.0e0380	fb		xce		        XCE
+.0e0381	e2 20		sep #$20	            SEP #$20
+.0e0383	c2 10		rep #$10	            REP #$10
+.0e0385	a9 20		lda #$20	        LDA #TEXT_COLOR            ; Set the Text Color (Green Text on Black Background)
+.0e0387	8f 1e 00 00	sta $00001e	        STA @lCUR_COLOR             ; @l forces 24 bit addressing mode...
+.0e038b	a9 00		lda #$00	        LDA #$00                    ; Set to No Border
+.0e038d	8f 04 00 af	sta $af0004	        STA @lBORDER_CTRL_REG
+.0e0391	22 2c 11 00	jsl $00112c	        JSL FK_SETSIZES
+.0e0395	20 53 03	jsr $0e0353	            JSR RESET_SCREEN
+.0e0398	c2 30		rep #$30	            REP #$30
+.0e039a	2b		pld		        PLD
+.0e039b	ab		plb		        PLB
+.0e039c	7a		ply		        PLY
+.0e039d	fa		plx		        PLX
+.0e039e	68		pla		        PLA
+.0e039f	28		plp		        PLP
+.0e03a0	60		rts		        RTS
+.0e03a1	60		rts		            RTS
+.0e03a2					PrintTrace
+.0e03a2	08		php		        PHP
+.0e03a3	c2 30		rep #$30	            REP #$30
+.0e03a5	48		pha		        PHA
+.0e03a6	da		phx		        PHX
+.0e03a7	5a		phy		        PHY
+.0e03a8	8b		phb		        PHB
+.0e03a9	0b		phd		        PHD
+.0e03aa	c2 30		rep #$30	            REP #$30
+.0e03ac	a3 0b		lda $0b,s	        LDA 11,S        ; Get the return address
+.0e03ae					calc_addr
+.0e03ae	18		clc		        CLC
+.0e03af	69 03 00	adc #$0003	        ADC #3          ; Add 3 to skip over the following branch
+.0e03b2	aa		tax		        TAX
+.0e03b3	e2 20		sep #$20	            SEP #$20
+.0e03b5	a9 0e		lda #$0e	        LDA #`PrintTrace
+.0e03b7	48		pha		        PHA
+.0e03b8	ab		plb		        PLB
+.0e03b9					pr_loop
+.0e03b9	bd 00 00	lda $0e0000,x	        LDA #0,B,X
+.0e03bc	f0 06		beq $0e03c4	        BEQ done
+.0e03be	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e03c1	e8		inx		        INX
+.0e03c2	80 f5		bra $0e03b9	        BRA pr_loop
+.0e03c4					done
+.0e03c4	c2 30		rep #$30	            REP #$30
+.0e03c6	2b		pld		        PLD
+.0e03c7	ab		plb		        PLB
+.0e03c8	7a		ply		        PLY
+.0e03c9	fa		plx		        PLX
+.0e03ca	68		pla		        PLA
+.0e03cb	28		plp		        PLP
+.0e03cc	60		rts		        RTS
+.0e03cd					PrintTraceAX
+.0e03cd	08		php		        PHP
+.0e03ce	c2 30		rep #$30	            REP #$30
 .0e03d0	48		pha		        PHA
-.0e03d1	e2 20		sep #$20	            SEP #$20
-.0e03d3	eb		xba		        XBA
-.0e03d4	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e03d8	c2 20		rep #$20	            REP #$20
-.0e03da	68		pla		        PLA
-.0e03db	e2 20		sep #$20	            SEP #$20
-.0e03dd	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e03e1	e2 20		sep #$20	            SEP #$20
-.0e03e3	a9 2c		lda #$2c	        LDA#','
-.0e03e5	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e03e8	a9 59		lda #$59	        LDA#'Y'
-.0e03ea	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e03ed	a9 3d		lda #$3d	        LDA#'='
-.0e03ef	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e03f2	c2 20		rep #$20	            REP #$20
-.0e03f4	68		pla		        PLA
-.0e03f5	48		pha		        PHA
-.0e03f6	e2 20		sep #$20	            SEP #$20
-.0e03f8	eb		xba		        XBA
-.0e03f9	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e03fd	c2 20		rep #$20	            REP #$20
-.0e03ff	68		pla		        PLA
-.0e0400	e2 20		sep #$20	            SEP #$20
-.0e0402	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e0406	e2 20		sep #$20	            SEP #$20
-.0e0408	a9 29		lda #$29	        LDA#')'
-.0e040a	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e040d	a9 0d		lda #$0d	        LDA #13
-.0e040f	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e0412	c2 30		rep #$30	            REP #$30
-.0e0414	2b		pld		        PLD
-.0e0415	ab		plb		        PLB
-.0e0416	7a		ply		        PLY
-.0e0417	fa		plx		        PLX
-.0e0418	68		pla		        PLA
-.0e0419	28		plp		        PLP
-.0e041a	60		rts		        RTS
-.0e041b					PrintMemory
-.0e041b	08		php		        PHP
-.0e041c	c2 30		rep #$30	            REP #$30
-.0e041e	48		pha		        PHA
-.0e041f	da		phx		        PHX
-.0e0420	5a		phy		        PHY
-.0e0421	8b		phb		        PHB
-.0e0422	0b		phd		        PHD
-.0e0423	c2 30		rep #$30	            REP #$30
-.0e0425	a3 0b		lda $0b,s	        LDA 11,S        ; Get the return address
-.0e0427					calc_addr
-.0e0427	18		clc		        CLC
-.0e0428	69 03 00	adc #$0003	        ADC #3          ; Add 3 to skip over the following branch
-.0e042b	aa		tax		        TAX
-.0e042c	e2 20		sep #$20	            SEP #$20
-.0e042e	a9 0e		lda #$0e	        LDA #`PrintTraceAXY
-.0e0430	48		pha		        PHA
-.0e0431	ab		plb		        PLB
-.0e0432	e2 20		sep #$20	            SEP #$20
-.0e0434	e8		inx		        INX
-.0e0435	e8		inx		        INX
-.0e0436	bd 00 00	lda $0e0000,x	        LDA #0,B,X
-.0e0439	85 aa		sta $aa		        STA TraceMemoryStart + 2
-.0e043b	ca		dex		        DEX
-.0e043c	ca		dex		        DEX
-.0e043d	c2 20		rep #$20	            REP #$20
-.0e043f	bd 00 00	lda $0e0000,x	        LDA #0,B,X
-.0e0442	85 a8		sta $a8		        STA TraceMemoryStart
-.0e0444	e8		inx		        INX
-.0e0445	e8		inx		        INX
-.0e0446	e8		inx		        INX
-.0e0447	bd 00 00	lda $0e0000,x	        LDA #0,B,X
-.0e044a	aa		tax		        TAX
-.0e044b	a0 00 00	ldy #$0000	        LDY #0
-.0e044e	e2 20		sep #$20	            SEP #$20
-.0e0450	a9 20		lda #$20	        LDA #' '
-.0e0452	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e0455	a5 aa		lda $aa		        LDA TraceMemoryStart + 2
-.0e0457	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e045b	a9 3a		lda #$3a	        LDA #':'
-.0e045d	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e0460	a5 a9		lda $a9		        LDA TraceMemoryStart + 1
-.0e0462	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e0466	a5 a8		lda $a8		        LDA TraceMemoryStart
-.0e0468	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e046c	a9 20		lda #$20	        LDA #' '
-.0e046e	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e0471					loop
-.0e0471	b7 a8		lda [$a8],y	        LDA [TraceMemoryStart], Y
-.0e0473	22 80 10 00	jsl $001080	        JSL PRINTAH
-.0e0477	ca		dex		        DEX
-.0e0478	f0 08		beq $0e0482	        BEQ +
-.0e047a	c8		iny		        INY
-.0e047b	a9 20		lda #$20	        LDA #' '
-.0e047d	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e0480	80 ef		bra $0e0471	        BRA loop
-.0e0482					+
-.0e0482	e2 20		sep #$20	            SEP #$20
-.0e0484	a9 0d		lda #$0d	        LDA #13
-.0e0486	20 92 04	jsr $0e0492	            JSR ScreenPutChar
-.0e0489	c2 30		rep #$30	            REP #$30
-.0e048b	2b		pld		        PLD
-.0e048c	ab		plb		        PLB
-.0e048d	7a		ply		        PLY
-.0e048e	fa		plx		        PLX
-.0e048f	68		pla		        PLA
-.0e0490	28		plp		        PLP
-.0e0491	60		rts		        RTS
-.0e0492					ScreenPutChar
-.0e0492	08		php		        PHP
-.0e0493	e2 20		sep #$20	            SEP #$20
-.0e0495	48		pha		        PHA
-.0e0496	48		pha		        PHA
-.0e0497	a9 00		lda #$00	        LDA #CHAN_CONSOLE       ; Switch to the console device
-.0e0499	22 3c 10 00	jsl $00103c	        JSL FK_SETOUT
-.0e049d	68		pla		        PLA
-.0e049e	22 18 10 00	jsl $001018	        JSL FK_PUTC
-.0e04a2					loop
-.0e04a2	af 89 0f 00	lda $000f89	        LDA @lKEYBOARD_LOCKS    ; Check the status of the lock keys
-.0e04a6	29 01		and #$01	        AND #KB_SCROLL_LOCK     ; Is Scroll Lock pressed?
-.0e04a8	d0 f8		bne $0e04a2	        BNE loop                ; Yes: wait until it's released
-.0e04aa	68		pla		        PLA
-.0e04ab	28		plp		        PLP
-.0e04ac	60		rts		            RTS
+.0e03d1	da		phx		        PHX
+.0e03d2	5a		phy		        PHY
+.0e03d3	8b		phb		        PHB
+.0e03d4	0b		phd		        PHD
+.0e03d5	da		phx		        PHX
+.0e03d6	48		pha		        PHA
+.0e03d7	c2 30		rep #$30	            REP #$30
+.0e03d9	a3 0f		lda $0f,s	        LDA 15,S        ; Get the return address
+.0e03db					calc_addr
+.0e03db	18		clc		        CLC
+.0e03dc	69 03 00	adc #$0003	        ADC #3          ; Add 3 to skip over the following branch
+.0e03df	aa		tax		        TAX
+.0e03e0	e2 20		sep #$20	            SEP #$20
+.0e03e2	a9 0e		lda #$0e	        LDA #`PrintTraceAX
+.0e03e4	48		pha		        PHA
+.0e03e5	ab		plb		        PLB
+.0e03e6					pr_loop
+.0e03e6	bd 00 00	lda $0e0000,x	        LDA #0,B,X
+.0e03e9	f0 06		beq $0e03f1	        BEQ done
+.0e03eb	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e03ee	e8		inx		        INX
+.0e03ef	80 f5		bra $0e03e6	        BRA pr_loop
+.0e03f1					done
+.0e03f1	e2 20		sep #$20	            SEP #$20
+.0e03f3	a9 28		lda #$28	        LDA #'('
+.0e03f5	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e03f8	e2 20		sep #$20	            SEP #$20
+.0e03fa	a9 41		lda #$41	        LDA #'A'
+.0e03fc	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e03ff	e2 20		sep #$20	            SEP #$20
+.0e0401	a9 3d		lda #$3d	        LDA #'='
+.0e0403	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0406	c2 20		rep #$20	            REP #$20
+.0e0408	68		pla		        PLA
+.0e0409	48		pha		        PHA
+.0e040a	e2 20		sep #$20	            SEP #$20
+.0e040c	eb		xba		        XBA
+.0e040d	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e0411	c2 20		rep #$20	            REP #$20
+.0e0413	68		pla		        PLA
+.0e0414	e2 20		sep #$20	            SEP #$20
+.0e0416	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e041a	e2 20		sep #$20	            SEP #$20
+.0e041c	a9 2c		lda #$2c	        LDA #','
+.0e041e	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0421	e2 20		sep #$20	            SEP #$20
+.0e0423	a9 58		lda #$58	        LDA #'X'
+.0e0425	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0428	e2 20		sep #$20	            SEP #$20
+.0e042a	a9 3d		lda #$3d	        LDA #'='
+.0e042c	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e042f	c2 20		rep #$20	            REP #$20
+.0e0431	68		pla		        PLA
+.0e0432	48		pha		        PHA
+.0e0433	e2 20		sep #$20	            SEP #$20
+.0e0435	eb		xba		        XBA
+.0e0436	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e043a	c2 20		rep #$20	            REP #$20
+.0e043c	68		pla		        PLA
+.0e043d	e2 20		sep #$20	            SEP #$20
+.0e043f	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e0443	e2 20		sep #$20	            SEP #$20
+.0e0445	a9 29		lda #$29	        LDA #')'
+.0e0447	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e044a	e2 20		sep #$20	            SEP #$20
+.0e044c	a9 0d		lda #$0d	        LDA #13
+.0e044e	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0451	c2 30		rep #$30	            REP #$30
+.0e0453	2b		pld		        PLD
+.0e0454	ab		plb		        PLB
+.0e0455	7a		ply		        PLY
+.0e0456	fa		plx		        PLX
+.0e0457	68		pla		        PLA
+.0e0458	28		plp		        PLP
+.0e0459	60		rts		        RTS
+.0e045a					PrintTraceAXY
+.0e045a	08		php		        PHP
+.0e045b	c2 30		rep #$30	            REP #$30
+.0e045d	48		pha		        PHA
+.0e045e	da		phx		        PHX
+.0e045f	5a		phy		        PHY
+.0e0460	8b		phb		        PHB
+.0e0461	0b		phd		        PHD
+.0e0462	5a		phy		        PHY
+.0e0463	da		phx		        PHX
+.0e0464	48		pha		        PHA
+.0e0465	c2 30		rep #$30	            REP #$30
+.0e0467	a3 11		lda $11,s	        LDA 17,S        ; Get the return address
+.0e0469					calc_addr
+.0e0469	18		clc		        CLC
+.0e046a	69 03 00	adc #$0003	        ADC #3          ; Add 3 to skip over the following branch
+.0e046d	aa		tax		        TAX
+.0e046e	e2 20		sep #$20	            SEP #$20
+.0e0470	a9 0e		lda #$0e	        LDA #`PrintTraceAXY
+.0e0472	48		pha		        PHA
+.0e0473	ab		plb		        PLB
+.0e0474					pr_loop
+.0e0474	bd 00 00	lda $0e0000,x	        LDA #0,B,X
+.0e0477	f0 06		beq $0e047f	        BEQ done
+.0e0479	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e047c	e8		inx		        INX
+.0e047d	80 f5		bra $0e0474	        BRA pr_loop
+.0e047f					done
+.0e047f	e2 20		sep #$20	            SEP #$20
+.0e0481	a9 28		lda #$28	        LDA #'('
+.0e0483	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0486	e2 20		sep #$20	            SEP #$20
+.0e0488	a9 41		lda #$41	        LDA #'A'
+.0e048a	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e048d	e2 20		sep #$20	            SEP #$20
+.0e048f	a9 3d		lda #$3d	        LDA #'='
+.0e0491	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0494	c2 20		rep #$20	            REP #$20
+.0e0496	68		pla		        PLA
+.0e0497	48		pha		        PHA
+.0e0498	e2 20		sep #$20	            SEP #$20
+.0e049a	eb		xba		        XBA
+.0e049b	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e049f	c2 20		rep #$20	            REP #$20
+.0e04a1	68		pla		        PLA
+.0e04a2	e2 20		sep #$20	            SEP #$20
+.0e04a4	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e04a8	e2 20		sep #$20	            SEP #$20
+.0e04aa	a9 2c		lda #$2c	        LDA #','
+.0e04ac	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e04af	e2 20		sep #$20	            SEP #$20
+.0e04b1	a9 58		lda #$58	        LDA #'X'
+.0e04b3	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e04b6	e2 20		sep #$20	            SEP #$20
+.0e04b8	a9 3d		lda #$3d	        LDA #'='
+.0e04ba	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e04bd	c2 20		rep #$20	            REP #$20
+.0e04bf	68		pla		        PLA
+.0e04c0	48		pha		        PHA
+.0e04c1	e2 20		sep #$20	            SEP #$20
+.0e04c3	eb		xba		        XBA
+.0e04c4	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e04c8	c2 20		rep #$20	            REP #$20
+.0e04ca	68		pla		        PLA
+.0e04cb	e2 20		sep #$20	            SEP #$20
+.0e04cd	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e04d1	e2 20		sep #$20	            SEP #$20
+.0e04d3	a9 2c		lda #$2c	        LDA #','
+.0e04d5	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e04d8	e2 20		sep #$20	            SEP #$20
+.0e04da	a9 59		lda #$59	        LDA #'Y'
+.0e04dc	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e04df	e2 20		sep #$20	            SEP #$20
+.0e04e1	a9 3d		lda #$3d	        LDA #'='
+.0e04e3	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e04e6	c2 20		rep #$20	            REP #$20
+.0e04e8	68		pla		        PLA
+.0e04e9	48		pha		        PHA
+.0e04ea	e2 20		sep #$20	            SEP #$20
+.0e04ec	eb		xba		        XBA
+.0e04ed	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e04f1	c2 20		rep #$20	            REP #$20
+.0e04f3	68		pla		        PLA
+.0e04f4	e2 20		sep #$20	            SEP #$20
+.0e04f6	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e04fa	e2 20		sep #$20	            SEP #$20
+.0e04fc	a9 29		lda #$29	        LDA #')'
+.0e04fe	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0501	e2 20		sep #$20	            SEP #$20
+.0e0503	a9 0d		lda #$0d	        LDA #13
+.0e0505	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0508	c2 30		rep #$30	            REP #$30
+.0e050a	2b		pld		        PLD
+.0e050b	ab		plb		        PLB
+.0e050c	7a		ply		        PLY
+.0e050d	fa		plx		        PLX
+.0e050e	68		pla		        PLA
+.0e050f	28		plp		        PLP
+.0e0510	60		rts		        RTS
+.0e0511					PrintMemory
+.0e0511	08		php		        PHP
+.0e0512	c2 30		rep #$30	            REP #$30
+.0e0514	48		pha		        PHA
+.0e0515	da		phx		        PHX
+.0e0516	5a		phy		        PHY
+.0e0517	8b		phb		        PHB
+.0e0518	0b		phd		        PHD
+.0e0519	c2 30		rep #$30	            REP #$30
+.0e051b	a3 0b		lda $0b,s	        LDA 11,S        ; Get the return address
+.0e051d					calc_addr
+.0e051d	18		clc		        CLC
+.0e051e	69 03 00	adc #$0003	        ADC #3          ; Add 3 to skip over the following branch
+.0e0521	aa		tax		        TAX
+.0e0522	e2 20		sep #$20	            SEP #$20
+.0e0524	a9 0e		lda #$0e	        LDA #`PrintMemory
+.0e0526	48		pha		        PHA
+.0e0527	ab		plb		        PLB
+.0e0528	e2 20		sep #$20	            SEP #$20
+.0e052a	e8		inx		        INX
+.0e052b	e8		inx		        INX
+.0e052c	bd 00 00	lda $0e0000,x	        LDA #0,B,X
+.0e052f	85 aa		sta $aa		        STA TraceMemoryStart + 2
+.0e0531	ca		dex		        DEX
+.0e0532	ca		dex		        DEX
+.0e0533	c2 20		rep #$20	            REP #$20
+.0e0535	bd 00 00	lda $0e0000,x	        LDA #0,B,X
+.0e0538	85 a8		sta $a8		        STA TraceMemoryStart
+.0e053a	e8		inx		        INX
+.0e053b	e8		inx		        INX
+.0e053c	e8		inx		        INX
+.0e053d	bd 00 00	lda $0e0000,x	        LDA #0,B,X
+.0e0540	aa		tax		        TAX
+.0e0541	a0 00 00	ldy #$0000	        LDY #0
+.0e0544	e2 20		sep #$20	            SEP #$20
+.0e0546	a9 20		lda #$20	        LDA #' '
+.0e0548	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e054b	a5 aa		lda $aa		        LDA TraceMemoryStart + 2
+.0e054d	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e0551	e2 20		sep #$20	            SEP #$20
+.0e0553	a9 3a		lda #$3a	        LDA #':'
+.0e0555	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0558	a5 a9		lda $a9		        LDA TraceMemoryStart + 1
+.0e055a	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e055e	a5 a8		lda $a8		        LDA TraceMemoryStart
+.0e0560	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e0564	e2 20		sep #$20	            SEP #$20
+.0e0566	a9 20		lda #$20	        LDA #' '
+.0e0568	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e056b					loop
+.0e056b	b7 a8		lda [$a8],y	        LDA [TraceMemoryStart], Y
+.0e056d	22 80 10 00	jsl $001080	        JSL PRINTAH
+.0e0571	ca		dex		        DEX
+.0e0572	f0 0a		beq $0e057e	        BEQ +
+.0e0574	c8		iny		        INY
+.0e0575	e2 20		sep #$20	            SEP #$20
+.0e0577	a9 20		lda #$20	        LDA #' '
+.0e0579	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e057c	80 ed		bra $0e056b	        BRA loop
+.0e057e					+
+.0e057e	e2 20		sep #$20	            SEP #$20
+.0e0580	a9 0d		lda #$0d	        LDA #13
+.0e0582	20 8e 05	jsr $0e058e	            JSR ScreenPutChar
+.0e0585	c2 30		rep #$30	            REP #$30
+.0e0587	2b		pld		        PLD
+.0e0588	ab		plb		        PLB
+.0e0589	7a		ply		        PLY
+.0e058a	fa		plx		        PLX
+.0e058b	68		pla		        PLA
+.0e058c	28		plp		        PLP
+.0e058d	60		rts		        RTS
+.0e058e					ScreenPutChar
+.0e058e	08		php		        PHP
+.0e058f	e2 20		sep #$20	            SEP #$20
+.0e0591	48		pha		        PHA
+.0e0592	48		pha		        PHA
+.0e0593	a9 00		lda #$00	        LDA #CHAN_CONSOLE       ; Switch to the console device
+.0e0595	22 3c 10 00	jsl $00103c	        JSL FK_SETOUT
+.0e0599	68		pla		        PLA
+.0e059a	22 18 10 00	jsl $001018	        JSL FK_PUTC
+.0e059e					loop
+.0e059e	af 89 0f 00	lda $000f89	        LDA @lKEYBOARD_LOCKS    ; Check the status of the lock keys
+.0e05a2	29 01		and #$01	        AND #KB_SCROLL_LOCK     ; Is Scroll Lock pressed?
+.0e05a4	d0 f8		bne $0e059e	        BNE loop                ; Yes: wait until it's released
+.0e05a6	68		pla		        PLA
+.0e05a7	28		plp		        PLP
+.0e05a8	60		rts		            RTS
 
 ;******  Return to file: .\Heap\Heap.asm
 
-.0e04ad					Strings
->0e04ad	48 65 61 70 4d 61 6e 61		    Ready:                        .NULL "HeapManager.UnitTests Ready", 13, 13
->0e04b5	67 65 72 2e 55 6e 69 74 54 65 73 74 73 20 52 65
->0e04c5	61 64 79 0d 0d 00
->0e04cb					MY_HEAP_MANAGER .long ?
+.0e05a9					Strings
+
+;******  Processing file: .\Heap\Version.asm
+
+>0e05a9	32 30 32 31 30 32 32 32		Version .NULL "20210222-074048", 13
+>0e05b1	2d 30 37 34 30 34 38 0d 00
+
+;******  Return to file: .\Heap\Heap.asm
+
+>0e05ba	48 65 61 70 4d 61 6e 61		    Ready:                        .NULL "HeapManager.UnitTests Ready", 13, 13
+>0e05c2	67 65 72 2e 55 6e 69 74 54 65 73 74 73 20 52 65
+>0e05d2	61 64 79 0d 0d 00
+>0e05d8					MY_HEAP_MANAGER .long ?
 
 ;******  End of listing

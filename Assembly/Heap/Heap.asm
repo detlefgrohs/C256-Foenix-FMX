@@ -14,8 +14,12 @@ TraceMemoryStart        = $A8
 
 ;* = $a0
 ;.dsection ZeroPage
+; * = $00FFFC
+; RESET   .word <>START  
 
-* = $0E0000             ; Set the origin for the file
+
+; * = $00e000             ; Set the origin for the file
+; START JMP Main
 
 ;.INCLUDE "../Common/PGX.asm"
 .INCLUDE "../Common/Macros.asm"
@@ -24,26 +28,28 @@ TraceMemoryStart        = $A8
 ; .INCLUDE "Macros.asm"
 
 
+* = $0e0000             ; Set the origin for the file
 
-START:   
+Main:   
     CALL SETUP
+    PRINTS Strings.Version
     PRINTS Strings.Ready
     
-    SETAXL
-    LDA #$1234
-    LDX #$5678
-    LDY #$90AB
-    TraceAXY "Test TraceAXY"
+    ; SETAXL
+    ; LDA #$1234
+    ; LDX #$5678
+    ; LDY #$90AB
+    ; TraceAXY "Test TraceAXY"
 
     CALL HeapManager.UnitTests.Init
     CALL HeapManager.UnitTests.ResetCurrentBlock
 
-    TraceMemory "HeapManager.ZeroPage", $0008A0, 6
-    TraceMemory "HeapManager.Header", HEAP_PAGE_START, SIZE(HeapManager.Header)
+    ; TraceMemory "HeapManager.ZeroPage", $0008A0, 6
+    ; TraceMemory "HeapManager.Header", HEAP_PAGE_START, SIZE(HeapManager.Header)
 
-    SETAL
-    LDA HeapManager.ZeroPage.BlockPointer
-    TraceMemoryA "HeapManager.Block", `HEAP_PAGE_START, SIZE(HeapManager.BlockHeader)
+    ; SETAL
+    ; LDA HeapManager.ZeroPage.BlockPointer
+    ; TraceMemoryA "HeapManager.Block", `HEAP_PAGE_START, SIZE(HeapManager.BlockHeader)
 
     RTL
 
@@ -56,6 +62,7 @@ START:
 
 
 Strings .block
+.INCLUDE "Version.asm"
     Ready:                        .NULL "HeapManager.UnitTests Ready", 13, 13
 .bend
 

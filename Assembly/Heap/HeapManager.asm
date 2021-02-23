@@ -18,7 +18,7 @@ HeapManager .block
 Init .proc
     TraceAXY "HeapManager.Init"
 
-    PUSH_ALL
+    PushAll
     ; Save Y To be used later...
     PHY
 
@@ -50,10 +50,9 @@ Init .proc
 
     ; Calculate the size of the heap and store in HEAP_MANAGER_HEADER.HEAP_TOTAL_SIZE
     SETAL
-    GetHeader End    
-    SEC
-    SBC ZeroPage.HeaderPointer  ; This is equal to HEAP_MANAGER_START
-    SBC #SIZE(Header)
+    GetHeader End
+    Subtract ZeroPage.HeaderPointer
+    Subtract #SIZE(Header)
     SetHeader TotalSize
 
     ; Now Create an unallocated block that encompasses the heap...
@@ -72,11 +71,26 @@ Init .proc
     SetBlockHeader RefCount
     
     GetHeader TotalSize
-    SEC
-    SBC #SIZE(BlockHeader)    
+    SubtractConstant SIZE(BlockHeader)  
     SetBlockHeader Size
 
-    PULL_ALL
+    ; TraceMemory "HeapManager.ZeroPage", $0008A0, 6
+    ; ;TraceMemoryZPIndirect "HeapManager.Header", ZeroPage.HeaderPointer, SIZE(HeapManager.Header)
+    ; TraceMemory "HeapManager.Header", HEAP_PAGE_START, SIZE(HeapManager.Header)
+    ; SETAL
+    ; LDA HeapManager.ZeroPage.BlockPointer
+    ; TraceMemoryA "HeapManager.Block", `HEAP_PAGE_START, SIZE(HeapManager.BlockHeader)
+
+    ; SETAS
+    ; SETXL
+    ; LDA HeapManager.ZeroPage.BlockPointer + 2
+    ; LDX HeapManager.ZeroPage.BlockPointer
+        TraceMemory "HeapManager.ZeroPage", $0008A0, 6
+    TraceMemoryLong "HeapManager.Header  ", HeapManager.ZeroPage.HeaderPointer, SIZE(HeapManager.Header)
+    TraceMemoryLong "HeapManager.Block   ", HeapManager.ZeroPage.BlockPointer, SIZE(HeapManager.BlockHeader)
+
+
+    PullAll
     RETURN
 .pend
 ;============================================================================
@@ -107,8 +121,7 @@ Allocate .proc
 
     ; IF Data_Size - Size(HEAP_MANAGER_BLOCK_HEADER) < ZP_HEAP_MANAGER_REQUESTED_SIZE
     GetBlockHeader Size
-    SEC
-    SBC #SIZE(BlockHeader)
+    SubtractConstant #SIZE(BlockHeader)
     CMP ZeroPage.RequestedSize
     BCC ConvertBlock
     CALL Private.SplitBlock    
@@ -259,16 +272,16 @@ AT_START_OF_LIST:
 ; Notes  :
 ;============================================================================
 SetupZeroPage .proc
-    Trace "HeapManager.SetupZeroPage"
-    PUSH_ALL
+    TraceAX "HeapManager.SetupZeroPage"
+    PushAll
 
     SETAS
     STA ZeroPage.HeaderPointer + 2
     SETAL
     TXA
     STA ZeroPage.HeaderPointer
-
-    PULL_ALL
+    
+    PullAll
     RETURN
 .pend
 .bend

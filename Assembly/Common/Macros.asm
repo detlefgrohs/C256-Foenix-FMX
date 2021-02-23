@@ -76,10 +76,12 @@ RETURN      .macro
             .endm   
 
 PRINTS          .macro
+            ;PushAll
                 SETAXL
                 SETDBR `\1 
                 LDX #<>\1               ; Point to the message in an ASCIIZ string
                 JSL PUTS                 ; And ask the kernel to print it
+            ;PullAll
                 .endm
                 
 CLEAR_WORD  .macro word
@@ -128,10 +130,29 @@ PULL_ALL .macro
     PLA
 .endm
 
+PushAll .macro
+        PHP
+        SETAXL
+        PHA
+        PHX
+        PHY
+        PHB
+        PHD
+.endm
 
+PullAll .macro
+        SETAXL
+        PLD
+        PLB
+        PLY
+        PLX
+        PLA
+        PLP
+        RTS
+.endm
 
 Trace .macro message
-.if TraceEnabled
+.if TraceEnabled == true
     JSR PrintTrace
     BRA +
     .NULL "   ", \message, 13
@@ -139,8 +160,17 @@ Trace .macro message
 .endif
 .endm
 
+TraceAX .macro message
+.if TraceEnabled == true
+    JSR PrintTraceAX
+    BRA +
+    .NULL "   ", \message
++
+.endif
+.endm
+
 TraceAXY .macro message
-.if TraceEnabled
+.if TraceEnabled == true
     JSR PrintTraceAXY
     BRA +
     .NULL "   ", \message
@@ -149,7 +179,7 @@ TraceAXY .macro message
 .endm
 
 TraceMemory .macro message, address, length
-.if TraceEnabled
+.if TraceEnabled == true
     JSR PrintTrace
     BRA +
     .NULL "   ", \message
@@ -163,7 +193,7 @@ TraceMemory .macro message, address, length
 .endm
 
 TraceMemoryA .macro message, databank, length
-.if TraceEnabled
+.if TraceEnabled == true
     JSR PrintTrace
     BRA +
     .NULL "   ", \message
@@ -178,3 +208,52 @@ Address
 +
 .endif
 .endm
+
+TraceMemoryLong .macro message, longAddress, length
+.if TraceEnabled == true
+.block
+    PHP
+    PHA
+    SETAS
+    LDA \longAddress + 2
+    STA Address + 2
+    SETAL
+    LDA \longAddress
+    STA Address
+    PLA
+    PLP
+
+    JSR PrintTrace
+    BRA +
+    .NULL "   ", \message
++    
+    JSR PrintMemory
+    BRA +
+Address
+    .LONG 0
+    .WORD \length
++
+.bend
+.endif
+.endm
+
+PrintChar .macro char
+        SETAS
+        LDA #\char
+        CALL ScreenPutChar
+.endm
+
+
+
+
+
+SubtractConstant .macro value
+    SEC
+    SBC #\value
+.endm
+
+Subtract .macro value
+    SEC
+    SBC \value
+.endm
+
