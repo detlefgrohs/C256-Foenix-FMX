@@ -98,7 +98,7 @@ This is some C# code that I wrote to generate the sprites that will make up the 
             Console.ReadLine();
         }
 ```
-![Generated Sprite Numbers](Resources\BouncingBallGeneratedSprite.png)
+![Generated Sprite Numbers](https://raw.githubusercontent.com/detlefgrohs/C256-Foenix-FMX/main/Resources/BouncingBallGeneratedSprite.png)
 
 # HeapManager
 My version of a heap manager for the the other applications that I am working on. I know I could just include another heap manager from another project that someone else wrote but the best way to understand something to reverse engineer and reimagine it the way you want.
