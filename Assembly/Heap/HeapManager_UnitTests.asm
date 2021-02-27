@@ -10,11 +10,33 @@ ExecuteUnitTest .macro unittest
 ExecuteAllUnitTests .proc
     SEC
 
+    PRINTS Strings.UnitTests
+    PRINTS Strings.Ready
+
     ExecuteUnitTest HeapManager.UnitTests.Init
     ExecuteUnitTest HeapManager.UnitTests.ResetCurrentBlock
-    ExecuteUnitTest HeapManager.UnitTests.EmptyHeapMoves
+    ExecuteUnitTest HeapManager.UnitTests.EmptyHeapMoveNext
+    ExecuteUnitTest HeapManager.UnitTests.EmptyHeapMovePrev
     ExecuteUnitTest HeapManager.UnitTests.Allocate
+    ExecuteUnitTest HeapManager.UnitTests.Free
 
+    PRINTS Strings.UnitTests
+    BCC +
+    
+    PushTextColor
+    SetTextColor PassTextColor
+
+    PRINTS Strings.AllPassed
+
+    PullTextColor
+    RETURN
++
+    PushTextColor
+    SetTextColor FailTextColor
+
+    PRINTS Strings.Failed    
+    
+    PullTextColor
     RETURN
 .pend
 
@@ -57,12 +79,7 @@ Init .proc
     HeaderCompareWord 6, HeapManager.Header.FirstBlock, (<>HEAP_PAGE_START + SIZE(HeapManager.Header))
 
     UnitTestEnd
-;     PRINTS Strings.Passed
-;     RETURN
-; FAILED:     
-;     JSL PRINTAH
-;     PRINTS Strings.Failed    
-; +   
+
     RETURN
 .pend
 
@@ -76,47 +93,60 @@ ResetCurrentBlock .proc
     LDX #<>HEAP_PAGE_START
     LDY #<>HEAP_PAGE_END
 
+    CALL HeapManager.ResetCurrentBlock
+
     PRINTS Strings.ResetCurrentBlock
 
     ; Check CURRENT_BLOCK_HEADER
-
+    HeaderCompareByte 0, HeapManager.Header.CurrentBlock + 2, `HEAP_PAGE_START
+    HeaderCompareWord 1, HeapManager.Header.CurrentBlock, (<>HEAP_PAGE_START + SIZE(HeapManager.Header))
 
     ; CHECK ZP_HEAP_MANAGER_BLOCK_POINTER
-
+    ZeroPageCompareByte 2, ZeroPage.BlockPointer + 2, `HEAP_PAGE_START
+    ZeroPageCompareWord 3, ZeroPage.BlockPointer, (<>HEAP_PAGE_START + SIZE(HeapManager.Header))
 
     UnitTestEnd
 .pend
 
-EmptyHeapMoves .proc   
-    PRINTS Strings.EmptyHeapMoves
+EmptyHeapMoveNext .proc   
+    PRINTS Strings.EmptyHeapMoveNext
     PRINTS Strings.Start
 
+    ; Setup My_Heap_Manager
+    SETAL
+    LDA #0
+    SETAS
+    SETXL
+    LDA #`HEAP_PAGE_START
+    LDX #<>HEAP_PAGE_START
 
+    CALL HeapManager.MoveNextBlock
 
+    PRINTS Strings.EmptyHeapMoveNext
 
+    CheckForCarryClear 0
 
-    PRINTS Strings.EmptyHeapMoves
+    UnitTestEnd
+.pend
 
-        ; SETAS
-        ; SETXL
-        ; LDA MY_HEAP_MANAGER + 2
-        ; LDX MY_HEAP_MANAGER
-        ; CALL HEAP_MANAGER_MOVE_NEXT_BLOCK
-        ; BCC +
-        ; STA
-        ; LDA #1
-        ; BRA FAILED
-+
-        ; SETAS
-        ; SETXL
-        ; LDA MY_HEAP_MANAGER + 2
-        ; LDX MY_HEAP_MANAGER
-        ; CALL HEAP_MANAGER_MOVE_PREV_BLOCK
-        ; BCC +
-        ; STA
-        ; LDA #2
-        ; BRA FAILED
-+
+EmptyHeapMovePrev .proc   
+    PRINTS Strings.EmptyHeapMovePrev
+    PRINTS Strings.Start
+
+    ; Setup My_Heap_Manager
+    SETAL
+    LDA #0
+    SETAS
+    SETXL
+    LDA #`HEAP_PAGE_START
+    LDX #<>HEAP_PAGE_START
+
+    CALL HeapManager.MovePrevBlock
+
+    PRINTS Strings.EmptyHeapMovePrev
+
+    CheckForCarryClear 0
+
     UnitTestEnd
 .pend
 
@@ -140,12 +170,37 @@ Allocate .proc
     UnitTestEnd
 .pend
 
+Free .proc
+    PRINTS Strings.Free
+    PRINTS Strings.Start
+
+    SETAL
+    LDA #0
+    SETAS
+    SETXL
+    LDA #`HEAP_PAGE_START
+    LDX #<>HEAP_PAGE_START
+    LDY #$00FF
+    CALL HeapManager.Free
+
+    PRINTS Strings.Free
+
+    CheckForCarrySet 0
+
+    UnitTestEnd
+.pend
 
 Strings .block
     Strings.Init:                .NULL "HeapManager.Init "
     Strings.ResetCurrentBlock:   .NULL "HeapManager.ResetCurrentBlock "
-    Strings.EmptyHeapMoves:      .NULL "HeapManager.EmptyHeapMoves "
+    Strings.EmptyHeapMoveNext:   .NULL "HeapManager.EmptyHeapMoveNext "
+    Strings.EmptyHeapMovePrev:   .NULL "HeapManager.EmptyHeapMovePrev "
     Strings.Allocate             .NULL "HeapManager.Allocate "
+    Strings.Free                 .NULL "HeapManager.Free "
+
+    Strings.UnitTests            .NULL "HeapManager.UnitTests "
+    Strings.Ready                .NULL "Ready", 13, 13
+    Strings.AllPassed            .NULL "All Passed", 13, 13
 
     Strings.Passed:              .NULL "Passed", 13, 13
     Strings.Failed:              .NULL " - Failed", 13, 13

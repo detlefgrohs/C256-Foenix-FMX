@@ -7,11 +7,13 @@ Private .block
 ; Notes  :
 ;============================================================================
 FindUnallocatedBlock .proc
+    Trace "HeapManager.Private.FindUnallocatedBlock"
     ; PUSH_ALL
     ; This will set the current block to the head of the list...
     CALL ResetCurrentBlock 
 
 FindBlockLoop:
+    SETAL
     GetBlockHeader RefCount
     BEQ FoundUnallocatedBlock
 
@@ -20,6 +22,7 @@ FindBlockLoop:
     BRA FindBlockLoop
 
 FoundUnallocatedBlock:
+    Trace "FoundUnallocatedBlock"
     GetBlockHeader Size
     CLC
     ADC #SIZE(BlockHeader)
@@ -32,6 +35,8 @@ NotFound:
     CLC
     RETURN
 Found:
+    Trace "Found unallocated block."
+    TraceMemory "HeapManager.ZeroPage", $0008A0, 6
     ; PULL_ALL
     SEC
     RETURN
@@ -44,6 +49,7 @@ Found:
 ; Notes  :
 ;============================================================================
 SplitBlock .proc
+    Trace "HeapManager.Private.SplitBlock"
 
     RETURN
 .pend
@@ -54,6 +60,7 @@ SplitBlock .proc
 ; Notes  :
 ;============================================================================
 ConvertBlock .proc
+    Trace "HeapManager.Private.ConvertBlock"
 
     RETURN
 .pend

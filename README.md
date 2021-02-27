@@ -1,7 +1,22 @@
 # C256-Foenix-FMX
 
 
+# ToDo
+## Maths
+Yes I am using the British spelling of Math...
+### Co-Processor Explorations
+<insert documentation from FMX dev guide>
 
+### Floating Point
+<this may merge into the section above>
+#### To/From string
+
+### Sin/Sqrt Et al....
+
+#### Square Root Based off of the Doom Algorithm
+
+## Game of Life
+## Ascii Raytracing
 
 
 # FBas (Foenix Basic)
@@ -189,7 +204,25 @@ Output
 - [ ] Clean-Up GitHub Repository for this...
 
 
-# Assembly Versioning
+
+
+
+
+# Development Enviornment
+## C256 Foenix FMX
+<insert picture of certificate>
+
+## My64
+
+## Visual Code
+
+## Compilation
+I use PowerShell to compile my applications because I more comfortable with the syntax and the power of the scripting language over batch files.
+
+I am considering using a FileWatcher class to detect changes to the source files and have the script automatically compile the code on changes and on success upload to the target system to test. Not sure yet if that would be helpful or just overkill. May implement it anyway and disable it for future consideration.
+
+
+### Assembly Versioning
 I use the following line in my compiling PowerShell script to update the ```Version.asm``` file that will be included during the assembly of the code. I print this at the top of my program while debugging so that I can see that it got updated and when.
 ```PowerShell
     'Version .NULL "' + [System.DateTime]::Now.ToString("yyyyMMdd-hhmmss") + '", 13' | Set-Content ".\$project\Version.asm"
@@ -203,10 +236,17 @@ Strings .block
 .bend
 ```
 
-# Compilation
-I use PowerShell to compile my applications because I more comfortable with the syntax and the power of the scripting language over batch files.
+### Blink(1)
+I am using a [Blink(1)](https://blink1.thingm.com/) USB notification thingee to let me know if the compilation was succcessful or failed. I found it will rummaging through some of my stuff and thought this would be the perfect use for it. Still think it is a little pricey at about $30 from Amazon but it works well and the API and CL for it are robust. (Yeah, I just ordered a second one from Amazon now so that I could get the MK3 version, the one I had was the MK2 version).
 
-I am considering using a FileWatcher class to detect changes to the source files and have the script automatically compile the code on changes and on success upload to the target system to test. Not sure yet if that would be helpful or just overkill. May implement it anyway and disable it for future consideration.
+<insert picture here>
 
-
-
+```PowerShell
+    if ($success) { 
+        Write-Host -ForegroundColor Green "Success!" 
+        & 'C:\Program Files\blink1-tool.exe' --rgb=#00ff00 --blink 4
+    } else { 
+        Write-Host -ForegroundColor Red "Failure!" 
+        & 'C:\Program Files\blink1-tool.exe' --rgb=#FF0000 --blink 4
+    }
+```

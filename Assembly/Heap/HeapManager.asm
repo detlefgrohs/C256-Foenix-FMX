@@ -60,9 +60,11 @@ Init .proc
     SETAS
     LDA ZeroPage.BlockPointer + 2
     SetHeader FirstBlock + 2
+    SetHeader CurrentBlock + 2
     SETAL
     LDA ZeroPage.BlockPointer
     SetHeader FirstBlock
+    SetHeader CurrentBlock
 
     ; Now Set the Block Header Parameters
     LDA #0
@@ -115,7 +117,7 @@ Allocate .proc
     ; to the left (lower) in memory. The newly allocation block will the
     ; current block and the free blocks will be next...
     
-    BRA Allocated
+    ;BRA Allocated
 
     STY ZeroPage.RequestedSize
 
@@ -156,8 +158,16 @@ Free .proc
     PUSH_ALL
     CALL SetupZeroPage
 
+    BRA Freed
 
+NotFreed:
     PULL_ALL
+    CLC
+    RETURN
+
+Freed:
+    PULL_ALL
+    SEC
     RETURN
 .pend
 ;============================================================================
@@ -183,20 +193,23 @@ Merge .proc
 ;============================================================================
 ResetCurrentBlock .proc
     Trace "HeapManager.ResetCurrentBlock"
-    ; PUSH_ALL
+
     CALL SetupZeroPage
 
-        ; SETAXL
-        ; GET_HEAP_MANAGER_HEADER HEAP_FIRST_BLOCK_HEADER
-        ; SET_HEAP_MANAGER_HEADER CURRENT_BLOCK_HEADER 
-        ; STA ZP_HEAP_MANAGER_BLOCK_POINTER
-        
-        ; SETAS
-        ; GET_HEAP_MANAGER_HEADER HEAP_FIRST_BLOCK_HEADER + 2
-        ; SET_HEAP_MANAGER_HEADER CURRENT_BLOCK_HEADER + 2
-        ; STA ZP_HEAP_MANAGER_BLOCK_POINTER + 2
+    SETAL
+    GetHeader FirstBlock
+    SetHeader CurrentBlock
+    ;STA ZeroPage.BlockPointer
 
-    ; PULL_ALL
+    SETAS
+    GetHeader FirstBlock + 2
+    SetHeader CurrentBlock + 2
+    ;STA ZeroPage.BlockPointer + 2
+
+    TraceMemory "HeapManager.ZeroPage", $0008A0, 6
+    ; ToDo: The next line is causing problems...
+    ;TraceMemoryLong "HeapManager.Header  ", HeapManager.ZeroPage.HeaderPointer, SIZE(HeapManager.Header)
+
     RETURN
 .pend
 ;============================================================================
@@ -211,6 +224,10 @@ ResetCurrentBlock .proc
 MoveNextBlock .proc
     ; PUSH_ALL
     CALL SetupZeroPage
+
+
+
+    BRA AT_END_OF_LIST
 
         ; SETAL
         ; GET_HEAP_MANAGER_BLOCK_HEADER NEXT_BLOCK_HEADER
@@ -229,7 +246,6 @@ MoveNextBlock .proc
     SEC
     RETURN
 AT_END_OF_LIST:
-    ; PULL_ALL
 
     CLC
     RETURN
@@ -247,6 +263,7 @@ MovePrevBlock .proc
     ; PUSH_ALL
     CALL SetupZeroPage
 
+    BRA AT_START_OF_LIST
         ; SETAL
         ; GET_HEAP_MANAGER_BLOCK_HEADER PREV_BLOCK_HEADER
         ; BEQ AT_START_OF_LIST

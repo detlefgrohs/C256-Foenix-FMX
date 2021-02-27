@@ -39,7 +39,7 @@ TraceMemoryStart        = $A8
 Main:   
     CALL SETUP
     PRINTS Strings.Version
-    PRINTS Strings.Ready
+    ;PRINTS Strings.Ready
     
     ; SETAXL
     ; LDA #$1234
@@ -72,8 +72,8 @@ Main:
 
 
 Strings .block
-.INCLUDE "Version.asm"
-    Ready:                        .NULL "HeapManager.UnitTests Ready", 13, 13
+    .INCLUDE "Version.asm"
+    
 .bend
 
 

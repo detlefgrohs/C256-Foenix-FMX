@@ -4,7 +4,7 @@ Set-Location $scriptDir
 function Assemble-Project() {
     param($project)
 
-    'Version .NULL "' + [System.DateTime]::Now.ToString("yyyyMMdd-hhmmss") + '", 13' | Set-Content ".\$project\Version.asm"
+    'Version .NULL "HeapManager ' + [System.DateTime]::Now.ToString("yyyyMMdd-hhmmss") + '", 13' | Set-Content ".\$project\Version.asm"
 
     # Write-Host -ForegroundColor Green "Compiling $project to PGX..."
 
@@ -55,6 +55,7 @@ function Assemble-Project() {
         Write-Host -ForegroundColor Green "Sending to C256 Foenix FMX"
         python C256Mgr\c256mgr.py --port COM3 --send Heap\bin\heap.hex
     }
+    
     if ($success) { 
         Write-Host -ForegroundColor Green "Success!" 
         & 'C:\Program Files\blink1-tool.exe' --rgb=#00ff00 --blink 4
@@ -62,8 +63,6 @@ function Assemble-Project() {
         Write-Host -ForegroundColor Red "Failure!" 
         & 'C:\Program Files\blink1-tool.exe' --rgb=#FF0000 --blink 4
     }
-
-     
 }
 
 Write-Host -ForegroundColor Yellow "============================================================================"

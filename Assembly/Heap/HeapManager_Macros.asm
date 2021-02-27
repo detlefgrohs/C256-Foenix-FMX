@@ -31,6 +31,7 @@ HeaderCompareByte .macro testNumber, index, compareTo
     RETURN
 +   
 .endm
+
 HeaderCompareWord .macro testNumber, index, compareTo
     SETAL
     LDY #\index
@@ -44,8 +45,41 @@ HeaderCompareWord .macro testNumber, index, compareTo
 +   
 .endm
 
+ZeroPageCompareByte .macro testNumber, zeroPageAddress, compareTo
+    SETAS
+    LDA \zeroPageAddress
+    CMP #\compareTo
+    BEQ +
+    SETAS
+    LDA #\testNumber
+    CALL FailedUnitTest
+    RETURN
++   
+.endm
+
+ZeroPageCompareWord .macro testNumber, zeroPageAddress, compareTo
+    SETAL
+    LDA \zeroPageAddress
+    CMP #\compareTo
+    BEQ +
+    SETAS
+    LDA #\testNumber
+    CALL FailedUnitTest
+    RETURN
++   
+.endm
+
 CheckForCarrySet .macro testNumber
     BCS +
+   SETAS
+    LDA #\testNumber
+    CALL FailedUnitTest
+    RETURN
++
+.endm
+
+CheckForCarryClear .macro testNumber
+    BCC +
    SETAS
     LDA #\testNumber
     CALL FailedUnitTest
