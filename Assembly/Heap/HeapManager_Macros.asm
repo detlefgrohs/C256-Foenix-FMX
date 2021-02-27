@@ -1,18 +1,4 @@
 
-
-
-
-
-; SET_HEAP_MANAGER_BLOCK_HEADER .macro parameter
-;     LDY #HEAP_MANAGER_BLOCK_HEADER.\parameter
-;     STA [ZP_HEAP_MANAGER_BLOCK_POINTER], Y
-; .endm
-
-; GET_HEAP_MANAGER_BLOCK_HEADER .macro parameter
-;     LDY #HEAP_MANAGER_BLOCK_HEADER.\parameter
-;     LDA [ZP_HEAP_MANAGER_BLOCK_POINTER], Y
-; .endm
-
 SetBlockHeader .macro parameter
     LDY #BlockHeader.\parameter
     STA [ZeroPage.BlockPointer], Y
@@ -23,17 +9,6 @@ GetBlockHeader .macro parameter
     LDA [ZeroPage.BlockPointer], Y
 .endm
 
-
-; SET_HEAP_MANAGER_HEADER .macro parameter
-;     LDY #HEAP_MANAGER_HEADER.\parameter
-;     STA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
-; .endm
-
-; GET_HEAP_MANAGER_HEADER .macro parameter
-;     LDY #HEAP_MANAGER_HEADER.\parameter
-;     LDA [ZP_HEAP_MANAGER_HEADER_POINTER], Y
-; .endm
-
 SetHeader .macro parameter
     LDY #Header.\parameter
     STA [ZeroPage.HeaderPointer], Y
@@ -43,19 +18,6 @@ GetHeader .macro parameter
     LDY #Header.\parameter
     LDA [ZeroPage.HeaderPointer], Y
 .endm
-
-
-
-; HeaderCompare .macro testNumber, index, compareTo
-;     LDY #\index
-;     LDA [ZeroPage.HeaderPointer], Y
-;     CMP #\compareTo
-;     BEQ +
-;     SETAS
-;     LDA #\testNumber
-;     BRA FAILED
-; +   
-; .endm
 
 HeaderCompareByte .macro testNumber, index, compareTo
     SETAS
@@ -82,12 +44,20 @@ HeaderCompareWord .macro testNumber, index, compareTo
 +   
 .endm
 
-
+CheckForCarrySet .macro testNumber
+    BCS +
+   SETAS
+    LDA #\testNumber
+    CALL FailedUnitTest
+    RETURN
++
+.endm
 
 UnitTestEnd .macro
+    PushTextColor
+    SetTextColor PassTextColor
     PRINTS Strings.Passed
-    RETURN
-; Failed:     
-;     JSL PRINTAH
-;     PRINTS Strings.Failed    
+    PullTextColor
+    SEC
+    RETURN 
 .endm

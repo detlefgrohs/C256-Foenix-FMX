@@ -1,0 +1,13 @@
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\bin\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.exe
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\bin\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.deps.json
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\bin\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.runtimeconfig.json
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\bin\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.runtimeconfig.dev.json
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\bin\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.dll
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\bin\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.pdb
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\obj\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.csprojAssemblyReference.cache
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\obj\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.AssemblyInfoInputs.cache
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\obj\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.AssemblyInfo.cs
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\obj\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.csproj.CoreCompileInputs.cache
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\obj\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.dll
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\obj\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.pdb
+C:\Users\Detlef Grohs\OneDrive\Documents\GitHub\C256-Foenix-FMX\Assembly\BouncingBall\Generator\BouncingBallSpriteGenerator\obj\Debug\netcoreapp3.1\BouncingBallSpriteGenerator.genruntimeconfig.cache

@@ -52,7 +52,7 @@ Init .proc
     SETAL
     GetHeader End
     Subtract ZeroPage.HeaderPointer
-    Subtract #SIZE(Header)
+    SubtractConstant SIZE(Header)
     SetHeader TotalSize
 
     ; Now Create an unallocated block that encompasses the heap...
@@ -103,6 +103,8 @@ Init .proc
 ; Notes  :
 ;============================================================================
 Allocate .proc
+    TraceAXY "HeapManager.Allocate"
+
     PUSH_ALL
     CALL SetupZeroPage
     ; So we are going to find the 1st free block and then split the block
@@ -113,6 +115,8 @@ Allocate .proc
     ; to the left (lower) in memory. The newly allocation block will the
     ; current block and the free blocks will be next...
     
+    BRA Allocated
+
     STY ZeroPage.RequestedSize
 
     ; Find Unallocated Block that is at least Y sized...
@@ -121,7 +125,7 @@ Allocate .proc
 
     ; IF Data_Size - Size(HEAP_MANAGER_BLOCK_HEADER) < ZP_HEAP_MANAGER_REQUESTED_SIZE
     GetBlockHeader Size
-    SubtractConstant #SIZE(BlockHeader)
+    SubtractConstant SIZE(BlockHeader)
     CMP ZeroPage.RequestedSize
     BCC ConvertBlock
     CALL Private.SplitBlock    

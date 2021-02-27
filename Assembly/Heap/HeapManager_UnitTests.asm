@@ -1,23 +1,27 @@
 
 UnitTests .block
 
-Strings .block
-    Strings.Init:                .NULL "HeapManager.Init "
-    Strings.ResetCurrentBlock:   .NULL "HeapManager.ResetCurrentBlock "
-    Strings.EmptyHeapMoves:      .NULL "HeapManager.EmptyHeapMoves "
+ExecuteUnitTest .macro unittest
+    BCC +
+    CALL \unittest
++
+.endm
 
-    Strings.Passed:              .NULL "Passed", 13
-    Strings.Failed:              .NULL " - Failed", 13
-.bend
+ExecuteAllUnitTests .proc
+    SEC
 
-FailedUnitTest .proc
-    JSL PRINTAH
-    PRINTS Strings.Failed  
+    ExecuteUnitTest HeapManager.UnitTests.Init
+    ExecuteUnitTest HeapManager.UnitTests.ResetCurrentBlock
+    ExecuteUnitTest HeapManager.UnitTests.EmptyHeapMoves
+    ExecuteUnitTest HeapManager.UnitTests.Allocate
+
     RETURN
 .pend
 
 Init .proc
-    Trace "HeapManager.UnitTests.Init"
+    PRINTS Strings.Init
+    PRINTS Strings.Start
+
     ; Setup My_Heap_Manager
     SETAL
     LDA #0
@@ -63,6 +67,9 @@ Init .proc
 .pend
 
 ResetCurrentBlock .proc
+    PRINTS Strings.ResetCurrentBlock
+    PRINTS Strings.Start
+
     SETAS
     SETXL
     LDA #`HEAP_PAGE_START
@@ -77,16 +84,18 @@ ResetCurrentBlock .proc
     ; CHECK ZP_HEAP_MANAGER_BLOCK_POINTER
 
 
-    ;UNIT_TEST_END
-    PRINTS Strings.Passed
-    BRA +
-FAILED:
-    PRINTS Strings.Failed
-+   RETURN
+    UnitTestEnd
 .pend
 
-UNIT_TEST_HEAP_MANAGER_EMPTY_HEAP_MOVES .proc    
-        PRINTS Strings.EmptyHeapMoves
+EmptyHeapMoves .proc   
+    PRINTS Strings.EmptyHeapMoves
+    PRINTS Strings.Start
+
+
+
+
+
+    PRINTS Strings.EmptyHeapMoves
 
         ; SETAS
         ; SETXL
@@ -108,12 +117,52 @@ UNIT_TEST_HEAP_MANAGER_EMPTY_HEAP_MOVES .proc
         ; LDA #2
         ; BRA FAILED
 +
-    ;UNIT_TEST_END
-    PRINTS Strings.Passed
-    BRA +
-FAILED:
-    PRINTS Strings.Failed
-+   RETURN
+    UnitTestEnd
 .pend
+
+Allocate .proc
+    PRINTS Strings.Allocate
+    PRINTS Strings.Start
+
+    SETAL
+    LDA #0
+    SETAS
+    SETXL
+    LDA #`HEAP_PAGE_START
+    LDX #<>HEAP_PAGE_START
+    LDY #$00FF
+    CALL HeapManager.Allocate
+
+    PRINTS Strings.Allocate
+
+    CheckForCarrySet 0
+
+    UnitTestEnd
+.pend
+
+
+Strings .block
+    Strings.Init:                .NULL "HeapManager.Init "
+    Strings.ResetCurrentBlock:   .NULL "HeapManager.ResetCurrentBlock "
+    Strings.EmptyHeapMoves:      .NULL "HeapManager.EmptyHeapMoves "
+    Strings.Allocate             .NULL "HeapManager.Allocate "
+
+    Strings.Passed:              .NULL "Passed", 13, 13
+    Strings.Failed:              .NULL " - Failed", 13, 13
+    Strings.Start:               .NULL "Start", 13
+.bend
+
+FailedUnitTest .proc
+    TAX
+    PushTextColor
+    SetTextColor FailTextColor
+    TXA
+    JSL PRINTAH
+    PRINTS Strings.Failed  
+    PullTextColor
+    CLC
+    RETURN
+.pend
+
 
 .bend
