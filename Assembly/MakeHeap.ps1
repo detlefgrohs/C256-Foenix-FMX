@@ -49,14 +49,21 @@ function Assemble-Project() {
         }
     # }
 
-    if ($success) { Write-Host -ForegroundColor Green "Success!" }
-    else          { Write-Host -ForegroundColor Red "Failure!" }
 
     if (((hostname) -eq "My64Bot") -and $success) {
         # Copy-Item "$project\bin\$project.pgx" "F:\"
         Write-Host -ForegroundColor Green "Sending to C256 Foenix FMX"
         python C256Mgr\c256mgr.py --port COM3 --send Heap\bin\heap.hex
     }
+    if ($success) { 
+        Write-Host -ForegroundColor Green "Success!" 
+        & 'C:\Program Files\blink1-tool.exe' --rgb=#00ff00 --blink 4
+    } else { 
+        Write-Host -ForegroundColor Red "Failure!" 
+        & 'C:\Program Files\blink1-tool.exe' --rgb=#FF0000 --blink 4
+    }
+
+     
 }
 
 Write-Host -ForegroundColor Yellow "============================================================================"

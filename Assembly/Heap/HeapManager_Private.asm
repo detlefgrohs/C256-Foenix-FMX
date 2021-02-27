@@ -12,10 +12,10 @@ FindUnallocatedBlock .proc
     CALL ResetCurrentBlock 
 
 FindBlockLoop:
-    GET_HEAP_MANAGER_BLOCK_HEADER REFERENCE_COUNT
+    GetBlockHeader RefCount
     BEQ FoundUnallocatedBlock
 
-    CALL HEAP_MANAGER_MOVE_NEXT_BLOCK
+    CALL MoveNextBlock
     BCC NotFound
     BRA FindBlockLoop
 

@@ -8,7 +8,13 @@ TraceEnabled = true
 HEAP_PAGE_START = $0F0000
 HEAP_PAGE_END   = $0FFFFF
 
-TEXT_COLOR              = $20
+TEXT_COLOR              = $F0
+
+PassTextColor = $20
+FailTextColor = $80
+TraceTextColor = $50
+TraceParameterTextColor = $90
+TraceMemoryTextColor = $40
 
 TraceMemoryStart        = $A8
 
@@ -41,8 +47,12 @@ Main:
     ; LDY #$90AB
     ; TraceAXY "Test TraceAXY"
 
-    CALL HeapManager.UnitTests.Init
-    CALL HeapManager.UnitTests.ResetCurrentBlock
+    ; CALL HeapManager.UnitTests.Init
+    ; CALL HeapManager.UnitTests.ResetCurrentBlock
+    ; CALL HeapManager.UnitTests.EmptyHeapMoves
+    ; CALL HeapManager.UnitTests.Allocate
+
+    CALL HeapManager.UnitTests.ExecuteAllUnitTests
 
     ; TraceMemory "HeapManager.ZeroPage", $0008A0, 6
     ; TraceMemory "HeapManager.Header", HEAP_PAGE_START, SIZE(HeapManager.Header)

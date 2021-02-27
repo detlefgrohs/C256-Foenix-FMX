@@ -257,3 +257,21 @@ Subtract .macro value
     SBC \value
 .endm
 
+
+PushTextColor .macro
+    SETAS
+    LDA @lCUR_COLOR
+    PHA
+.endm
+
+PullTextColor .macro
+    SETAS
+    PLA
+    STA @lCUR_COLOR
+.endm
+
+SetTextColor .macro color
+    SETAS
+    LDA #\color
+    STA @lCUR_COLOR
+.endm

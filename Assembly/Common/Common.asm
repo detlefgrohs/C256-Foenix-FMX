@@ -45,6 +45,7 @@ SETUP .proc ; Setup the CPU
 ; This is ugly trace code and I hate it...
 PrintTrace .proc
         PushAll
+        SetTextColor TraceTextColor
 
         SETAXL
         LDA 11,S        ; Get the return address
@@ -66,6 +67,7 @@ pr_loop
         BRA pr_loop
 
 done    
+        SetTextColor TEXT_COLOR
         PullAll
         .pend
 
@@ -73,6 +75,7 @@ done
 
 PrintTraceAX .proc
         PushAll
+        ; SetTextColor TraceTextColor
 
         PHX
         PHA
@@ -89,6 +92,7 @@ calc_addr
         PHA
         PLB
 
+        SetTextColor TraceTextColor
 pr_loop     
         LDA #0,B,X
         BEQ done
@@ -97,6 +101,7 @@ pr_loop
         BRA pr_loop
 
 done    
+        SetTextColor TraceParameterTextColor
         PrintChar '('
         PrintChar 'A'
         PrintChar '='
@@ -130,11 +135,13 @@ done
         PrintChar ')'
         PrintChar 13
 
+        SetTextColor TEXT_COLOR
         PullAll
         .pend
 
 PrintTraceAXY .proc
         PushAll
+        
 
         PHY
         PHX
@@ -152,6 +159,7 @@ calc_addr
         PHA
         PLB
 
+        SetTextColor TraceTextColor
 pr_loop     
         LDA #0,B,X
         BEQ done
@@ -160,6 +168,7 @@ pr_loop
         BRA pr_loop
 
 done    
+        SetTextColor TraceParameterTextColor
         PrintChar '('
         PrintChar 'A'
         PrintChar '='
@@ -208,6 +217,7 @@ done
         PrintChar ')'
         PrintChar 13
 
+        SetTextColor TEXT_COLOR
         PullAll
         .pend
 
@@ -215,6 +225,7 @@ done
 
 PrintMemory .proc
         PushAll
+        SetTextColor TraceMemoryTextColor
 
         setaxl
         LDA 11,S        ; Get the return address
@@ -275,6 +286,7 @@ loop
         LDA #13
         CALL ScreenPutChar
 
+        SetTextColor TEXT_COLOR
         PullAll
         .pend
 

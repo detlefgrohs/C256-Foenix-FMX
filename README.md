@@ -188,3 +188,25 @@ Output
 - [ ] Join Discord
 - [ ] Clean-Up GitHub Repository for this...
 
+
+# Assembly Versioning
+I use the following line in my compiling PowerShell script to update the ```Version.asm``` file that will be included during the assembly of the code. I print this at the top of my program while debugging so that I can see that it got updated and when.
+```PowerShell
+    'Version .NULL "' + [System.DateTime]::Now.ToString("yyyyMMdd-hhmmss") + '", 13' | Set-Content ".\$project\Version.asm"
+```
+This is the assembly to include the generated string and print it...
+```
+PRINTS Strings.Version
+
+Strings .block
+    .INCLUDE "Version.asm"
+.bend
+```
+
+# Compilation
+I use PowerShell to compile my applications because I more comfortable with the syntax and the power of the scripting language over batch files.
+
+I am considering using a FileWatcher class to detect changes to the source files and have the script automatically compile the code on changes and on success upload to the target system to test. Not sure yet if that would be helpful or just overkill. May implement it anyway and disable it for future consideration.
+
+
+
